@@ -1,0 +1,31 @@
+services:
+  database:
+    image: postgres:13
+    container_name: postgres-db
+    environment:
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+#  api:
+#    build: .
+#    container_name: api
+#    environment:
+#      DB_URL: ${DB_URL}
+#      DB_USERNAME: ${DB_USERNAME}
+#      DB_PASSWORD: ${DB_PASSWORD}
+#    ports:
+#      - "8080:8080"
+#    volumes:
+#      - ./src:/app/src
+#      - ./target/classes:/app/target/classes
+#    depends_on:
+#      - database
+#    restart: on-failure
+
+volumes:
+  postgres-data: { }
