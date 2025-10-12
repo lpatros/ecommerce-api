@@ -6,17 +6,15 @@ import com.lpatros.ecommerce_api.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
-
 @Service
 public class CategoryService {
 
     @Autowired
     private CategoryRepository categoryRepository;
 
-    public CategoryDTO getCategoryById(Long id) {
+    public CategoryDTO findById(Long id) {
         try {
-            Category category = categoryRepository.findCategoryById(id)
+            Category category = categoryRepository.findById(id)
                     .orElseThrow(() -> new RuntimeException("Categoria não encontrada com id: " + id));
 
             return new CategoryDTO(category.getName(), category.getStatus());
