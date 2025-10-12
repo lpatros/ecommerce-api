@@ -54,4 +54,33 @@ public class CategoryService {
             throw new RuntimeException("Erro ao criar categoria: " + e.getMessage());
         }
     }
+
+    public CategoryDTO update(Long id, CategoryDTO categoryDTO) {
+        try {
+            Category category = categoryRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Categoria não encontrada com id: " + id));
+
+            category.setName(categoryDTO.getName());
+            category.setStatus(categoryDTO.getStatus());
+            Category updatedCategory = categoryRepository.save(category);
+
+            return new CategoryDTO(
+                    updatedCategory.getName(),
+                    updatedCategory.getStatus());
+
+        } catch (RuntimeException e) {
+            throw new RuntimeException("Erro ao atualizar categoria com id: " + id);
+        }
+    }
+
+    public void delete(Long id) {
+        try {
+            Category category = categoryRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Categoria não encontrada com id: " + id));
+
+            categoryRepository.delete(category);
+        } catch (RuntimeException e) {
+            throw new RuntimeException("Erro ao deletar categoria com id: " + id);
+        }
+    }
 }
