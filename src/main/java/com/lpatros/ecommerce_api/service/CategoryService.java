@@ -5,12 +5,27 @@ import com.lpatros.ecommerce_api.entity.Category;
 import com.lpatros.ecommerce_api.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 @Service
 public class CategoryService {
 
     @Autowired
     private CategoryRepository categoryRepository;
+
+    public List<CategoryDTO> findAll() {
+        try {
+            List<Category> categories = categoryRepository.findAll();
+
+            return categories.stream()
+                    .map(category -> new CategoryDTO(
+                            category.getName(),
+                            category.getStatus()))
+                            .toList();
+        } catch (RuntimeException e) {
+            throw new RuntimeException("Erro ao buscar todas as categorias");
+        }
+    }
 
     public CategoryDTO findById(Long id) {
         try {
@@ -20,6 +35,23 @@ public class CategoryService {
             return new CategoryDTO(category.getName(), category.getStatus());
         } catch (RuntimeException e) {
             throw new RuntimeException("Erro ao buscar categoria com id: " + id);
+        }
+    }
+
+    public CategoryDTO create(CategoryDTO categoryDTO) {
+        try {
+            Category category = new Category();
+            category.setName(categoryDTO.getName());
+            category.setStatus(categoryDTO.getStatus());
+
+            Category savedCategory = categoryRepository.save(category);
+
+            return new CategoryDTO(
+                    savedCategory.getName(),
+                    savedCategory.getStatus());
+
+        } catch (RuntimeException e) {
+            throw new RuntimeException("Erro ao criar categoria: " + e.getMessage());
         }
     }
 }
