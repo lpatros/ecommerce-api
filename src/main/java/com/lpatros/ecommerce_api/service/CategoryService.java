@@ -14,7 +14,7 @@ public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    public CategoryDTO getCategoryById(UUID id) {
+    public CategoryDTO getCategoryById(Long id) {
         try {
             Category category = categoryRepository.findCategoryById(id)
                     .orElseThrow(() -> new RuntimeException("Categoria não encontrada com id: " + id));

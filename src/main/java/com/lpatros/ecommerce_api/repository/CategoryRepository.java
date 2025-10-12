@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface CategoryRepository extends JpaRepository<Category, UUID> {
+public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-    Optional<Category> findCategoryById(UUID id);
+    Optional<Category> findCategoryById(Long id);
 }
