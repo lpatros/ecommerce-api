@@ -15,8 +15,8 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @GetMapping
-    public ResponseEntity<List<CategoryDTO>> findAll() {
-        return ResponseEntity.ok(categoryService.findAll());
+    public ResponseEntity<List<CategoryDTO>> findAll(@RequestParam(required = false, name = "status") String status) {
+        return ResponseEntity.ok(categoryService.find(status));
     }
 
     @GetMapping("/{id}")

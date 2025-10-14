@@ -13,17 +13,28 @@ public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    public List<CategoryDTO> findAll() {
+    public List<CategoryDTO> find(String status) {
         try {
-            List<Category> categories = categoryRepository.findAll();
+
+            Boolean statusBool = null;
+            if (status != null) {
+                if (status.equalsIgnoreCase("true")) {
+                    statusBool = true;
+                } else if (status.equalsIgnoreCase("false")) {
+                    statusBool = false;
+                } else {
+                    throw new RuntimeException("Status inválido: " + status);
+                }
+            }
+
+            List<Category> categories = categoryRepository.find(statusBool);
 
             return categories.stream()
-                    .map(category -> new CategoryDTO(
-                            category.getName(),
-                            category.getStatus()))
-                            .toList();
+                    .map(category -> new CategoryDTO(category.getName(), category.getStatus()))
+                    .toList();
+
         } catch (RuntimeException e) {
-            throw new RuntimeException("Erro ao buscar todas as categorias");
+            throw new RuntimeException("Erro ao buscar categorias com status: " + status);
         }
     }
 
