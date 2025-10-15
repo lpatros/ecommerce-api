@@ -83,7 +83,16 @@ public class CategoryService {
             Category category = categoryRepository.findById(id)
                     .orElseThrow(() -> new RuntimeException("Categoria não encontrada com id: " + id));
 
-            categoryRepository.delete(category);
+            if (category == null) {
+                throw new RuntimeException("Categoria não encontrada com id: " + id);
+            }
+
+            if (!category.getStatus()) {
+                throw new RuntimeException("Categoria já está inativa com id: " + id);
+            }
+
+            categoryRepository.disable(id);
+
         } catch (RuntimeException e) {
             throw new RuntimeException("Erro ao deletar categoria com id: " + id);
         }

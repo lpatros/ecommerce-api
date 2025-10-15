@@ -19,11 +19,13 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CategoryDTO>> findAllByStatus(@RequestParam(required = false, name = "status") String status) {
-        Boolean statusBoolean = null;
+    public ResponseEntity<List<CategoryDTO>> findAll(@RequestParam(required = false, name = "status", defaultValue = "true") String status) {
+
+        boolean statusBoolean = true;
         if (status != null && !status.isEmpty() && (status.equalsIgnoreCase("true") || status.equalsIgnoreCase("false"))) {
             statusBoolean = Boolean.parseBoolean(status);
         }
+
         return ResponseEntity.ok(categoryService.findAllByStatus(statusBoolean));
     }
 
