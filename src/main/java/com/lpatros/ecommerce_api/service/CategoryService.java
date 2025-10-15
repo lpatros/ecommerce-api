@@ -2,6 +2,7 @@ package com.lpatros.ecommerce_api.service;
 
 import com.lpatros.ecommerce_api.dto.CategoryDTO;
 import com.lpatros.ecommerce_api.entity.Category;
+import com.lpatros.ecommerce_api.mapper.CategoryMapper;
 import com.lpatros.ecommerce_api.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,31 +11,28 @@ import java.util.List;
 @Service
 public class CategoryService {
 
-    @Autowired
-    private CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
+    private final CategoryMapper categoryMapper;
 
-    public List<CategoryDTO> find(String status) {
+    @Autowired
+    public CategoryService(CategoryRepository categoryRepository, CategoryMapper categoryMapper) {
+        this.categoryRepository = categoryRepository;
+        this.categoryMapper = categoryMapper;
+    }
+
+    public List<CategoryDTO> findAllByStatus(Boolean status) {
         try {
 
-            Boolean statusBool = null;
-            if (status != null) {
-                if (status.equalsIgnoreCase("true")) {
-                    statusBool = true;
-                } else if (status.equalsIgnoreCase("false")) {
-                    statusBool = false;
-                } else {
-                    throw new RuntimeException("Status inválido: " + status);
-                }
+            if (status == null) {
+                List<Category> categories = categoryRepository.findAll();
+                return categories.stream().map(categoryMapper::toDTO).toList();
             }
 
-            List<Category> categories = categoryRepository.find(statusBool);
-
-            return categories.stream()
-                    .map(category -> new CategoryDTO(category.getName(), category.getStatus()))
-                    .toList();
+            List<Category>  categories = categoryRepository.findByStatus(status);
+            return categories.stream().map(categoryMapper::toDTO).toList();
 
         } catch (RuntimeException e) {
-            throw new RuntimeException("Erro ao buscar categorias com status: " + status);
+            throw new RuntimeException("Erro ao buscar as categorias");
         }
     }
 
@@ -43,7 +41,7 @@ public class CategoryService {
             Category category = categoryRepository.findById(id)
                     .orElseThrow(() -> new RuntimeException("Categoria não encontrada com id: " + id));
 
-            return new CategoryDTO(category.getName(), category.getStatus());
+            return categoryMapper.toDTO(category);
         } catch (RuntimeException e) {
             throw new RuntimeException("Erro ao buscar categoria com id: " + id);
         }
@@ -57,9 +55,7 @@ public class CategoryService {
 
             Category savedCategory = categoryRepository.save(category);
 
-            return new CategoryDTO(
-                    savedCategory.getName(),
-                    savedCategory.getStatus());
+            return categoryMapper.toDTO(savedCategory);
 
         } catch (RuntimeException e) {
             throw new RuntimeException("Erro ao criar categoria: " + e.getMessage());
@@ -75,9 +71,7 @@ public class CategoryService {
             category.setStatus(categoryDTO.getStatus());
             Category updatedCategory = categoryRepository.save(category);
 
-            return new CategoryDTO(
-                    updatedCategory.getName(),
-                    updatedCategory.getStatus());
+            return categoryMapper.toDTO(updatedCategory);
 
         } catch (RuntimeException e) {
             throw new RuntimeException("Erro ao atualizar categoria com id: " + id);

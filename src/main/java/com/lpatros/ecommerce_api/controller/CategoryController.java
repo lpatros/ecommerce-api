@@ -11,12 +11,20 @@ import java.util.List;
 @RequestMapping("/categories")
 public class CategoryController {
 
+    private final CategoryService categoryService;
+
     @Autowired
-    private CategoryService categoryService;
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
 
     @GetMapping
-    public ResponseEntity<List<CategoryDTO>> findAll(@RequestParam(required = false, name = "status") String status) {
-        return ResponseEntity.ok(categoryService.find(status));
+    public ResponseEntity<List<CategoryDTO>> findAllByStatus(@RequestParam(required = false, name = "status") String status) {
+        Boolean statusBoolean = null;
+        if (status != null && !status.isEmpty() && (status.equalsIgnoreCase("true") || status.equalsIgnoreCase("false"))) {
+            statusBoolean = Boolean.parseBoolean(status);
+        }
+        return ResponseEntity.ok(categoryService.findAllByStatus(statusBoolean));
     }
 
     @GetMapping("/{id}")
