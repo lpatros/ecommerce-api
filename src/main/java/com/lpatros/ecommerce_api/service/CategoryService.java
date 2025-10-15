@@ -1,12 +1,14 @@
 package com.lpatros.ecommerce_api.service;
 
-import com.lpatros.ecommerce_api.dto.CategoryDTO;
+import com.lpatros.ecommerce_api.dto.CategoryRequest;
+import com.lpatros.ecommerce_api.dto.CategoryResponse;
 import com.lpatros.ecommerce_api.entity.Category;
 import com.lpatros.ecommerce_api.mapper.CategoryMapper;
 import com.lpatros.ecommerce_api.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CategoryService {
@@ -20,58 +22,52 @@ public class CategoryService {
         this.categoryMapper = categoryMapper;
     }
 
-    public List<CategoryDTO> findAllByStatus(Boolean status) {
+    public List<CategoryResponse> findByStatus(Boolean status) {
         try {
 
-            if (status == null) {
-                List<Category> categories = categoryRepository.findAll();
-                return categories.stream().map(categoryMapper::toDTO).toList();
-            }
-
             List<Category>  categories = categoryRepository.findByStatus(status);
-            return categories.stream().map(categoryMapper::toDTO).toList();
+            return categories.stream().map(categoryMapper::toResponse).toList();
 
         } catch (RuntimeException e) {
             throw new RuntimeException("Erro ao buscar as categorias");
         }
     }
 
-    public CategoryDTO findById(Long id) {
+    public CategoryResponse findById(Long id) {
         try {
             Category category = categoryRepository.findById(id)
                     .orElseThrow(() -> new RuntimeException("Categoria não encontrada com id: " + id));
 
-            return categoryMapper.toDTO(category);
+            return categoryMapper.toResponse(category);
         } catch (RuntimeException e) {
             throw new RuntimeException("Erro ao buscar categoria com id: " + id);
         }
     }
 
-    public CategoryDTO create(CategoryDTO categoryDTO) {
+    public CategoryResponse create(CategoryRequest categoryRequest) {
         try {
-            Category category = new Category();
-            category.setName(categoryDTO.getName());
-            category.setStatus(categoryDTO.getStatus());
+            Category category = categoryMapper.toEntity(categoryRequest);
 
             Category savedCategory = categoryRepository.save(category);
 
-            return categoryMapper.toDTO(savedCategory);
+            return categoryMapper.toResponse(savedCategory);
 
         } catch (RuntimeException e) {
             throw new RuntimeException("Erro ao criar categoria: " + e.getMessage());
         }
     }
 
-    public CategoryDTO update(Long id, CategoryDTO categoryDTO) {
+    public CategoryResponse update(Long id, CategoryRequest categoryRequest) {
         try {
-            Category category = categoryRepository.findById(id)
-                    .orElseThrow(() -> new RuntimeException("Categoria não encontrada com id: " + id));
+            Optional<Category> category = categoryRepository.findById(id);
 
-            category.setName(categoryDTO.getName());
-            category.setStatus(categoryDTO.getStatus());
-            Category updatedCategory = categoryRepository.save(category);
+            if (category.isEmpty()) {
+                throw new RuntimeException("Categoria não encontrada com id: " + id);
+            }
 
-            return categoryMapper.toDTO(updatedCategory);
+            category.get().setName(categoryRequest.getName());
+
+            return categoryMapper.toResponse(categoryRepository.save(category.get()));
 
         } catch (RuntimeException e) {
             throw new RuntimeException("Erro ao atualizar categoria com id: " + id);

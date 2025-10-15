@@ -1,10 +1,26 @@
 package com.lpatros.ecommerce_api.mapper;
 
-import com.lpatros.ecommerce_api.dto.CategoryDTO;
+import com.lpatros.ecommerce_api.dto.CategoryRequest;
+import com.lpatros.ecommerce_api.dto.CategoryResponse;
 import com.lpatros.ecommerce_api.entity.Category;
-import org.mapstruct.Mapper;
+import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring")
-public interface CategoryMapper {
-    CategoryDTO toDTO(Category category);
+@Component
+public class CategoryMapper {
+
+    public CategoryResponse toResponse(Category category) {
+        return new CategoryResponse(
+                category.getId(),
+                category.getName(),
+                category.getStatus()
+        );
+    }
+
+    public Category toEntity(CategoryRequest categoryRequest) {
+        return new Category(
+                null,
+                categoryRequest.getName(),
+                Boolean.TRUE
+        );
+    }
 }

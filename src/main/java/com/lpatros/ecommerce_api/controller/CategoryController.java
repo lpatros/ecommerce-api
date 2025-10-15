@@ -1,6 +1,7 @@
 package com.lpatros.ecommerce_api.controller;
 
-import com.lpatros.ecommerce_api.dto.CategoryDTO;
+import com.lpatros.ecommerce_api.dto.CategoryRequest;
+import com.lpatros.ecommerce_api.dto.CategoryResponse;
 import com.lpatros.ecommerce_api.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,29 +20,29 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CategoryDTO>> findAll(@RequestParam(required = false, name = "status", defaultValue = "true") String status) {
+    public ResponseEntity<List<CategoryResponse>> findByStatus(@RequestParam(required = false, name = "status", defaultValue = "true") String status) {
 
         boolean statusBoolean = true;
         if (status != null && !status.isEmpty() && (status.equalsIgnoreCase("true") || status.equalsIgnoreCase("false"))) {
             statusBoolean = Boolean.parseBoolean(status);
         }
 
-        return ResponseEntity.ok(categoryService.findAllByStatus(statusBoolean));
+        return ResponseEntity.ok(categoryService.findByStatus(statusBoolean));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CategoryDTO> findById(@PathVariable Long id) {
+    public ResponseEntity<CategoryResponse> findById(@PathVariable Long id) {
         return ResponseEntity.ok(categoryService.findById(id));
     }
 
     @PostMapping
-    public ResponseEntity<CategoryDTO> create(@RequestBody CategoryDTO categoryDTO) {
-        return ResponseEntity.ok(categoryService.create(categoryDTO));
+    public ResponseEntity<CategoryResponse> create(@RequestBody CategoryRequest categoryRequest) {
+        return ResponseEntity.ok(categoryService.create(categoryRequest));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CategoryDTO> update(@PathVariable Long id, @RequestBody CategoryDTO categoryDTO) {
-        return ResponseEntity.ok(categoryService.update(id, categoryDTO));
+    public ResponseEntity<CategoryResponse> update(@PathVariable Long id, @RequestBody CategoryRequest categoryRequest) {
+        return ResponseEntity.ok(categoryService.update(id, categoryRequest));
     }
 
     @DeleteMapping("/{id}")

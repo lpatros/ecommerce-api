@@ -9,8 +9,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoryDTO {
-    private Long id;
+public class CategoryRequest {
     private String name;
-    private Boolean status;
 }
