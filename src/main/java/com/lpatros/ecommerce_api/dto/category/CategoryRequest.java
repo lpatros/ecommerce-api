@@ -1,4 +1,4 @@
-package com.lpatros.ecommerce_api.dto;
+package com.lpatros.ecommerce_api.dto.category;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,8 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoryResponse {
-    private Long id;
+public class CategoryRequest {
     private String name;
     private Boolean status;
 }

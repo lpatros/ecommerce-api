@@ -1,7 +1,7 @@
 package com.lpatros.ecommerce_api.controller;
 
-import com.lpatros.ecommerce_api.dto.CategoryRequest;
-import com.lpatros.ecommerce_api.dto.CategoryResponse;
+import com.lpatros.ecommerce_api.dto.category.CategoryRequest;
+import com.lpatros.ecommerce_api.dto.category.CategoryResponse;
 import com.lpatros.ecommerce_api.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

@@ -1,7 +1,7 @@
 package com.lpatros.ecommerce_api.service;
 
-import com.lpatros.ecommerce_api.dto.CategoryRequest;
-import com.lpatros.ecommerce_api.dto.CategoryResponse;
+import com.lpatros.ecommerce_api.dto.category.CategoryRequest;
+import com.lpatros.ecommerce_api.dto.category.CategoryResponse;
 import com.lpatros.ecommerce_api.entity.Category;
 import com.lpatros.ecommerce_api.mapper.CategoryMapper;
 import com.lpatros.ecommerce_api.repository.CategoryRepository;
@@ -59,6 +59,11 @@ public class CategoryService {
 
     public CategoryResponse update(Long id, CategoryRequest categoryRequest) {
         try {
+
+            if (categoryRequest.getName() == null || categoryRequest.getName().isEmpty()) {
+                throw new RuntimeException("Nome da categoria não pode ser nulo ou vazio");
+            }
+
             Optional<Category> category = categoryRepository.findById(id);
 
             if (category.isEmpty()) {
@@ -66,6 +71,7 @@ public class CategoryService {
             }
 
             category.get().setName(categoryRequest.getName());
+            category.get().setStatus(categoryRequest.getStatus());
 
             return categoryMapper.toResponse(categoryRepository.save(category.get()));
 
