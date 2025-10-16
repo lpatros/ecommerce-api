@@ -13,9 +13,9 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CategoryRequest {
 
-    @NotBlank(message = "O nome da categoria não pode estar em branco")
+    @NotBlank(message = "O nome da categoria é obrigatório")
     private String name;
 
-    @NotNull(message = "O status da categoria não pode ser nulo")
+    @NotNull(message = "O status da categoria é obrigatório")
     private Boolean status;
 }

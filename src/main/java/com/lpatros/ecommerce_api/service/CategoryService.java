@@ -26,8 +26,7 @@ public class CategoryService {
     }
 
     public List<CategoryResponse> findByStatus(Boolean status) {
-
-        List<Category>  categories = categoryRepository.findByStatus(status);
+        List<Category> categories = categoryRepository.findByStatus(status);
         return categories.stream().map(categoryMapper::toResponse).toList();
     }
 
