@@ -5,6 +5,7 @@ import com.lpatros.ecommerce_api.dto.category.CategoryResponse;
 import com.lpatros.ecommerce_api.entity.Category;
 import com.lpatros.ecommerce_api.exception.NotActiveException;
 import com.lpatros.ecommerce_api.exception.NotFoundException;
+import com.lpatros.ecommerce_api.exception.NotUniqueException;
 import com.lpatros.ecommerce_api.mapper.CategoryMapper;
 import com.lpatros.ecommerce_api.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,12 @@ public class CategoryService {
     public CategoryResponse create(CategoryRequest categoryRequest) {
             Category category = categoryMapper.toEntity(categoryRequest);
 
+            List<Category> existingCategories = categoryRepository.findByName(categoryRequest.getName());
+
+            if (!existingCategories.isEmpty()) {
+                throw new NotUniqueException("Categoria", "nome");
+            }
+
             Category savedCategory = categoryRepository.save(category);
 
             return categoryMapper.toResponse(savedCategory);
@@ -54,6 +61,12 @@ public class CategoryService {
 
         if (category.isEmpty()) {
             throw new NotFoundException("Categoria", "id");
+        }
+
+        List<Category> existingCategories = categoryRepository.findByName(categoryRequest.getName());
+
+        if (!existingCategories.isEmpty() && !existingCategories.getFirst().getId().equals(id)) {
+            throw new NotUniqueException("Categoria", "nome");
         }
 
         category.get().setName(categoryRequest.getName());

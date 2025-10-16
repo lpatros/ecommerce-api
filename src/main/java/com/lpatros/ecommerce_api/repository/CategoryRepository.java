@@ -13,6 +13,8 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     List<Category> findByStatus(Boolean status);
 
+    List<Category> findByName(String name);
+
     @Modifying
     @Transactional
     @Query("UPDATE Category c SET c.status = false WHERE c.id = :id")

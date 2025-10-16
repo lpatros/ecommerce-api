@@ -1,6 +1,7 @@
 package com.lpatros.ecommerce_api.exception;
 
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -28,6 +29,17 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NotActiveException.class)
     private ResponseEntity<RestErrorMessage> NotActiveException(NotActiveException ex) {;
+        RestErrorMessage restErrorMessage = new RestErrorMessage(
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage(),
+                null);
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(restErrorMessage);
+    }
+
+    @ExceptionHandler(NotUniqueException.class)
+    private ResponseEntity<RestErrorMessage> NotUniqueException(NotUniqueException ex) {;
         RestErrorMessage restErrorMessage = new RestErrorMessage(
                 LocalDateTime.now(),
                 HttpStatus.BAD_REQUEST.value(),
