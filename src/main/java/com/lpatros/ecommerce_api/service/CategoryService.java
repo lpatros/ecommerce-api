@@ -26,7 +26,7 @@ public class CategoryService {
     }
 
     public List<CategoryResponse> findByStatus(Boolean status) {
-        List<Category> categories = categoryRepository.findByStatus(status);
+        List<Category> categories = categoryRepository.findByStatusOrderByIdAsc(status);
         return categories.stream().map(categoryMapper::toResponse).toList();
     }
 
@@ -68,10 +68,10 @@ public class CategoryService {
             throw new NotUniqueException("Categoria", "nome");
         }
 
-        category.get().setName(categoryRequest.getName());
-        category.get().setStatus(categoryRequest.getStatus());
+        Category updatedCategory = categoryMapper.toEntity(categoryRequest);
+        updatedCategory.setId(id);
 
-        return categoryMapper.toResponse(categoryRepository.save(category.get()));
+        return categoryMapper.toResponse(categoryRepository.save(updatedCategory));
     }
 
     public void delete(Long id) {

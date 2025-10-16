@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-    List<Category> findByStatus(Boolean status);
+    List<Category> findByStatusOrderByIdAsc(Boolean status);
 
     List<Category> findByName(String name);
 

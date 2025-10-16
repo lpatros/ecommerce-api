@@ -1,6 +1,7 @@
 package com.lpatros.ecommerce_api.dto.product;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,15 +20,17 @@ public class ProductRequest {
 
     private String description;
 
-    @NotBlank(message = "O estoque do produto é obrigatório")
+    @NotNull(message = "A quantidade em estoque do produto é obrigatória")
     private Long stock;
 
-    @NotBlank(message = "O preço do produto é obrigatório")
+    @NotNull(message = "O preço do produto é obrigatório")
     private BigDecimal price;
 
     @NotBlank(message = "A URL da imagem do produto é obrigatória")
     private String imageUrl;
 
-    @NotBlank(message = "A categoria do produto é obrigatória")
+    @NotNull(message = "A categoria do produto é obrigatória")
     private Long categoryId;
+
+    private Boolean status;
 }
