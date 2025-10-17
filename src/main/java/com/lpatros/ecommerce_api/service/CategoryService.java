@@ -87,6 +87,5 @@ public class CategoryService {
         }
 
         categoryRepository.disable(id);
-
     }
 }

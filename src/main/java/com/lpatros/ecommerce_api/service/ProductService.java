@@ -4,6 +4,7 @@ import com.lpatros.ecommerce_api.dto.product.ProductRequest;
 import com.lpatros.ecommerce_api.dto.product.ProductResponse;
 import com.lpatros.ecommerce_api.entity.Category;
 import com.lpatros.ecommerce_api.entity.Product;
+import com.lpatros.ecommerce_api.exception.NotActiveException;
 import com.lpatros.ecommerce_api.exception.NotFoundException;
 import com.lpatros.ecommerce_api.mapper.ProductMapper;
 import com.lpatros.ecommerce_api.repository.CategoryRepository;
@@ -28,8 +29,8 @@ public class ProductService {
         this.productMapper = productMapper;
     }
 
-    public List<ProductResponse> findAll() {
-        List<Product> products = productRepository.findAll();
+    public List<ProductResponse> findAll(Boolean status) {
+        List<Product> products = productRepository.findByStatusOrderByIdAsc(status);
         return products.stream().map(productMapper::toResponse).toList();
     }
 
@@ -57,5 +58,41 @@ public class ProductService {
         Product savedProduct = productRepository.save(product);
 
         return productMapper.toResponse(savedProduct);
+    }
+
+    public ProductResponse update(Long id, ProductRequest productRequest) {
+
+        Optional<Product> product = productRepository.findById(id);
+
+        if (product.isEmpty()) {
+            throw new NotFoundException("Produto", "id");
+        }
+
+        Optional<Category> category = categoryRepository.findById(productRequest.getCategoryId());
+
+        if (category.isEmpty()) {
+            throw new NotFoundException("Categoria", "id");
+        }
+
+        Product updatedProduct = productMapper.toEntity(productRequest, category.get());
+        updatedProduct.setId(id);
+        updatedProduct.setCreatedAt(product.get().getCreatedAt());
+
+        return productMapper.toResponse(productRepository.save(updatedProduct));
+    }
+
+    public void delete(Long id) {
+
+        Optional<Product> product = productRepository.findById(id);
+
+        if (product.isEmpty()) {
+            throw new NotFoundException("Produto", "id");
+        }
+
+        if (!product.get().getStatus()) {
+            throw new NotActiveException(product.get().getName());
+        }
+
+        productRepository.disable(id);
     }
 }

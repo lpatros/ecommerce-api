@@ -106,4 +106,16 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(restErrorMessage);
     }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<RestErrorMessage> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+        RestErrorMessage restErrorMessage = new RestErrorMessage(
+                LocalDateTime.now(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "Erro de violacao de integridade de dados",
+                null
+        );
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(restErrorMessage);
+    }
 }

@@ -21,8 +21,8 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> findAll() {
-        return ResponseEntity.ok(productService.findAll());
+    public ResponseEntity<List<ProductResponse>> findAll(@RequestParam(required = false, defaultValue = "true") Boolean status) {
+        return ResponseEntity.ok(productService.findAll(status));
     }
 
     @GetMapping("/{id}")
@@ -33,5 +33,16 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<ProductResponse> create(@RequestBody @Valid ProductRequest productRequest) {
         return ResponseEntity.ok(productService.create(productRequest));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductResponse> update(@PathVariable Long id, @RequestBody @Valid ProductRequest productRequest) {
+        return ResponseEntity.ok(productService.update(id, productRequest));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        productService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

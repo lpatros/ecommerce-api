@@ -20,7 +20,7 @@ public class CategoryMapper {
         return new Category(
                 null,
                 categoryRequest.getName(),
-                categoryRequest.getStatus()
+                Boolean.TRUE
         );
     }
 }

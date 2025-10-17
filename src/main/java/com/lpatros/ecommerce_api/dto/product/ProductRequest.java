@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.math.BigDecimal;
 
 @Getter
@@ -31,6 +30,4 @@ public class ProductRequest {
 
     @NotNull(message = "A categoria do produto é obrigatória")
     private Long categoryId;
-
-    private Boolean status;
 }

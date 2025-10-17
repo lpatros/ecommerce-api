@@ -6,5 +6,7 @@ CREATE TABLE products (
     price DECIMAL(10, 2) NOT NULL,
     image_url VARCHAR(512),
     category_id BIGINT REFERENCES categories(id),
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     status BOOLEAN NOT NULL DEFAULT TRUE
 );)
