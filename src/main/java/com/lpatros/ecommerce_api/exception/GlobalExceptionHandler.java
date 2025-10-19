@@ -1,7 +1,10 @@
 package com.lpatros.ecommerce_api.exception;
 
-import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +19,13 @@ import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private final MessageSource messageSource;
+
+    @Autowired
+    public GlobalExceptionHandler(MessageSource messageSource) {
+        this.messageSource = messageSource;
+    }
 
     @ExceptionHandler(NotFoundException.class)
     private ResponseEntity<RestErrorMessage> NotFoundException(NotFoundException ex) {;
@@ -60,7 +70,7 @@ public class GlobalExceptionHandler {
                         .collect(
                             Collectors.toMap(
                                     FieldError::getField,
-                                    DefaultMessageSourceResolvable::getDefaultMessage
+                                    fieldError -> messageSource.getMessage(fieldError, LocaleContextHolder.getLocale())
                             )
                         )
         );
@@ -113,6 +123,18 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now(),
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "Erro de violacao de integridade de dados",
+                null
+        );
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(restErrorMessage);
+    }
+
+    @ExceptionHandler(InvalidDataAccessApiUsageException.class)
+    public ResponseEntity<RestErrorMessage> handleInvalidDataAccessApiUsageException(InvalidDataAccessApiUsageException ex) {
+        RestErrorMessage restErrorMessage = new RestErrorMessage(
+                LocalDateTime.now(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "Erro de uso invalido da API de acesso a dados",
                 null
         );
 

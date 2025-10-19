@@ -1,5 +1,6 @@
 package com.lpatros.ecommerce_api.controller;
 
+import com.lpatros.ecommerce_api.dto.product.ProductFilter;
 import com.lpatros.ecommerce_api.dto.product.ProductRequest;
 import com.lpatros.ecommerce_api.dto.product.ProductResponse;
 import com.lpatros.ecommerce_api.service.ProductService;
@@ -21,8 +22,8 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> findAll(@RequestParam(required = false, defaultValue = "true") Boolean status) {
-        return ResponseEntity.ok(productService.findAll(status));
+    public ResponseEntity<List<ProductResponse>> findAll(@ModelAttribute ProductFilter productFilter) {
+        return ResponseEntity.ok(productService.findAll(productFilter));
     }
 
     @GetMapping("/{id}")

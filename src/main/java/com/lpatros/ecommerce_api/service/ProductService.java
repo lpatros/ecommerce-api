@@ -1,5 +1,6 @@
 package com.lpatros.ecommerce_api.service;
 
+import com.lpatros.ecommerce_api.dto.product.ProductFilter;
 import com.lpatros.ecommerce_api.dto.product.ProductRequest;
 import com.lpatros.ecommerce_api.dto.product.ProductResponse;
 import com.lpatros.ecommerce_api.entity.Category;
@@ -9,7 +10,9 @@ import com.lpatros.ecommerce_api.exception.NotFoundException;
 import com.lpatros.ecommerce_api.mapper.ProductMapper;
 import com.lpatros.ecommerce_api.repository.CategoryRepository;
 import com.lpatros.ecommerce_api.repository.ProductRepository;
+import com.lpatros.ecommerce_api.repository.specification.ProductSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,8 +32,12 @@ public class ProductService {
         this.productMapper = productMapper;
     }
 
-    public List<ProductResponse> findAll(Boolean status) {
-        List<Product> products = productRepository.findByStatusOrderByIdAsc(status);
+    public List<ProductResponse> findAll(ProductFilter productFilter) {
+
+        Specification<Product> specification = ProductSpecification.filter(productFilter);
+
+        List<Product> products = productRepository.findAll(specification);
+
         return products.stream().map(productMapper::toResponse).toList();
     }
 
