@@ -6,9 +6,10 @@ import com.lpatros.ecommerce_api.dto.product.ProductResponse;
 import com.lpatros.ecommerce_api.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 @RestController
 @RequestMapping("/products")
@@ -22,8 +23,8 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> findAll(@ModelAttribute ProductFilter productFilter) {
-        return ResponseEntity.ok(productService.findAll(productFilter));
+    public ResponseEntity<Page<ProductResponse>> findAll(@ModelAttribute ProductFilter productFilter, Pageable pageable) {
+        return ResponseEntity.ok(productService.findAll(productFilter, pageable));
     }
 
     @GetMapping("/{id}")

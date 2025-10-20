@@ -12,6 +12,8 @@ import com.lpatros.ecommerce_api.repository.CategoryRepository;
 import com.lpatros.ecommerce_api.repository.ProductRepository;
 import com.lpatros.ecommerce_api.repository.specification.ProductSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -32,13 +34,13 @@ public class ProductService {
         this.productMapper = productMapper;
     }
 
-    public List<ProductResponse> findAll(ProductFilter productFilter) {
+    public Page<ProductResponse> findAll(ProductFilter productFilter, Pageable pageable) {
 
         Specification<Product> specification = ProductSpecification.filter(productFilter);
 
-        List<Product> products = productRepository.findAll(specification);
+        Page<Product> products = productRepository.findAll(specification, pageable);
 
-        return products.stream().map(productMapper::toResponse).toList();
+        return products.map(productMapper::toResponse);
     }
 
     public ProductResponse findById(Long id) {
