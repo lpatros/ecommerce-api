@@ -98,7 +98,7 @@ public class ProductService {
             throw new NotFoundException("Produto", "id");
         }
 
-        if (!product.get().getStatus()) {
+        if (product.get().getDeleted()) {
             throw new NotActiveException(product.get().getName());
         }
 

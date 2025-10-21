@@ -25,8 +25,8 @@ public class CategoryService {
         this.categoryMapper = categoryMapper;
     }
 
-    public List<CategoryResponse> findByStatus(Boolean status) {
-        List<Category> categories = categoryRepository.findByStatusOrderByIdAsc(status);
+    public List<CategoryResponse> findAll() {
+        List<Category> categories = categoryRepository.findByOrderByIdAsc();
         return categories.stream().map(categoryMapper::toResponse).toList();
     }
 
@@ -82,7 +82,7 @@ public class CategoryService {
             throw new NotFoundException("Categoria", "id");
         }
 
-        if (!category.get().getStatus()) {
+        if (category.get().getDeleted()) {
             throw new NotActiveException(category.get().getName());
         }
 

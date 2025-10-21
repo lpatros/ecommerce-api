@@ -11,8 +11,7 @@ public class CategoryMapper {
     public CategoryResponse toResponse(Category category) {
         return new CategoryResponse(
                 category.getId(),
-                category.getName(),
-                category.getStatus()
+                category.getName()
         );
     }
 
@@ -20,7 +19,7 @@ public class CategoryMapper {
         return new Category(
                 null,
                 categoryRequest.getName(),
-                Boolean.TRUE
+                Boolean.FALSE
         );
     }
 }

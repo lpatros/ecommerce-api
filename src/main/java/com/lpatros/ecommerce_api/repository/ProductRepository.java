@@ -13,6 +13,6 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
 
     @Modifying
     @Transactional
-    @Query("UPDATE Product p SET p.status = false WHERE p.id = :id")
+    @Query("UPDATE Product p SET p.deleted = true WHERE p.id = :id")
     void disable(Long id);
 }

@@ -21,6 +21,5 @@ public class ProductResponse {
     private String imageUrl;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private Boolean status;
     private CategoryResponse category;
 }

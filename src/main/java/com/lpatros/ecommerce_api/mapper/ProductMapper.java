@@ -19,7 +19,6 @@ public class ProductMapper {
             product.getImageUrl(),
             product.getCreatedAt(),
             product.getUpdatedAt(),
-            product.getStatus(),
             new CategoryMapper().toResponse(product.getCategory())
         );
     }
@@ -34,7 +33,7 @@ public class ProductMapper {
             request.getImageUrl(),
             null,
             null,
-            Boolean.TRUE,
+            Boolean.FALSE,
             category
         );
     }

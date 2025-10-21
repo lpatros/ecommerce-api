@@ -23,8 +23,8 @@ public class CategoryController {
 
     @Operation(summary = "Get all Categories by status", method = "GET")
     @GetMapping
-    public ResponseEntity<List<CategoryResponse>> findByStatus(@RequestParam(required = false, name = "status", defaultValue = "true") Boolean status) {
-        return ResponseEntity.ok(categoryService.findByStatus(status));
+    public ResponseEntity<List<CategoryResponse>> findAll() {
+        return ResponseEntity.ok(categoryService.findAll());
     }
 
     @Operation(summary = "Get a Category by Id", method = "GET")

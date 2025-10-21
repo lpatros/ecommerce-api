@@ -11,12 +11,12 @@ import java.util.List;
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-    List<Category> findByStatusOrderByIdAsc(Boolean status);
+    List<Category> findByOrderByIdAsc();
 
     List<Category> findByName(String name);
 
     @Modifying
     @Transactional
-    @Query("UPDATE Category c SET c.status = false WHERE c.id = :id")
+    @Query("UPDATE Category c SET c.deleted = true WHERE c.id = :id")
     void disable(Long id);
 }
