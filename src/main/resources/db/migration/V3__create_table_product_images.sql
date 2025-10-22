@@ -1,0 +1,6 @@
+create table product_images (
+    id BIGSERIAL PRIMARY KEY,
+    url VARCHAR(512) NOT NULL,
+    product_id BIGINT REFERENCES products(id) ON DELETE CASCADE,
+    is_cover BOOLEAN NOT NULL DEFAULT FALSE
+)
