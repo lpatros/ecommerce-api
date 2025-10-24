@@ -1,5 +1,7 @@
 package com.lpatros.ecommerce_api.service;
 
+import com.lpatros.ecommerce_api.configuration.Pagination;
+import com.lpatros.ecommerce_api.dto.category.CategoryFilter;
 import com.lpatros.ecommerce_api.dto.category.CategoryRequest;
 import com.lpatros.ecommerce_api.dto.category.CategoryResponse;
 import com.lpatros.ecommerce_api.entity.Category;
@@ -8,7 +10,11 @@ import com.lpatros.ecommerce_api.exception.NotFoundException;
 import com.lpatros.ecommerce_api.exception.NotUniqueException;
 import com.lpatros.ecommerce_api.mapper.CategoryMapper;
 import com.lpatros.ecommerce_api.repository.CategoryRepository;
+import com.lpatros.ecommerce_api.repository.specification.CategorySpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -25,9 +31,14 @@ public class CategoryService {
         this.categoryMapper = categoryMapper;
     }
 
-    public List<CategoryResponse> findAll() {
-        List<Category> categories = categoryRepository.findByOrderByIdAsc();
-        return categoryMapper.toResponseList(categories);
+    public Pagination<CategoryResponse> findAll(CategoryFilter categoryFilter, Pageable pageable) {
+
+        Specification<Category> notDeleted = CategorySpecification.isNotDeleted();
+        Specification<Category> specification = CategorySpecification.filter(categoryFilter).and(notDeleted);
+
+        Page<Category> categories = categoryRepository.findAll(specification, pageable);
+
+        return categoryMapper.toResponsePagination(categories);
     }
 
     public CategoryResponse findById(Long id) {
@@ -36,6 +47,10 @@ public class CategoryService {
 
         if (category.isEmpty()) {
             throw new NotFoundException("Category", "id");
+        }
+
+        if (category.get().getDeleted()) {
+            throw new NotActiveException("Category");
         }
 
         return categoryMapper.toResponse(category.get());

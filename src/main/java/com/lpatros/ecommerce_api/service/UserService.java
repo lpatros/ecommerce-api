@@ -1,5 +1,6 @@
 package com.lpatros.ecommerce_api.service;
 
+import com.lpatros.ecommerce_api.configuration.Pagination;
 import com.lpatros.ecommerce_api.dto.user.UserFilter;
 import com.lpatros.ecommerce_api.dto.user.UserRequest;
 import com.lpatros.ecommerce_api.dto.user.UserResponse;
@@ -31,13 +32,14 @@ public class UserService {
         this.userMapper = userMapper;
     }
 
-    public Page<UserResponse> findAll(UserFilter userFilter, Pageable pageable) {
+    public Pagination<UserResponse> findAll(UserFilter userFilter, Pageable pageable) {
 
-        Specification<User> specification = UserSpecification.filter(userFilter);
+        Specification<User> notDeleted = UserSpecification.isNotDeleted();
+        Specification<User> specification = UserSpecification.filter(userFilter).and(notDeleted);
 
         Page<User> users = userRepository.findAll(specification, pageable);
 
-        return userMapper.toResponsePage(users);
+        return userMapper.toResponsePagination(users);
     }
 
     public UserResponse findById(Long id) {
@@ -46,6 +48,10 @@ public class UserService {
 
         if (user.isEmpty()) {
             throw new NotFoundException("User", "id");
+        }
+
+        if (user.get().getDeleted()) {
+            throw new NotActiveException("User");
         }
 
         return userMapper.toResponse(user.get());

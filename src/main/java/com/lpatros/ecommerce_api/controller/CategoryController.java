@@ -1,14 +1,16 @@
 package com.lpatros.ecommerce_api.controller;
 
+import com.lpatros.ecommerce_api.configuration.Pagination;
+import com.lpatros.ecommerce_api.dto.category.CategoryFilter;
 import com.lpatros.ecommerce_api.dto.category.CategoryRequest;
 import com.lpatros.ecommerce_api.dto.category.CategoryResponse;
 import com.lpatros.ecommerce_api.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 @RestController
 @RequestMapping("/categories")
@@ -23,8 +25,8 @@ public class CategoryController {
 
     @Operation(summary = "Get all Categories by status", method = "GET")
     @GetMapping
-    public ResponseEntity<List<CategoryResponse>> findAll() {
-        return ResponseEntity.ok(categoryService.findAll());
+    public ResponseEntity<Pagination<CategoryResponse>> findAll(@ModelAttribute CategoryFilter categoryFilter, Pageable pageable) {
+        return ResponseEntity.ok(categoryService.findAll(categoryFilter, pageable));
     }
 
     @Operation(summary = "Get a Category by Id", method = "GET")

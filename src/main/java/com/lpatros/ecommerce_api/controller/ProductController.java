@@ -8,7 +8,6 @@ import com.lpatros.ecommerce_api.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,8 +26,7 @@ public class ProductController {
     @Operation(summary = "Get all Products with filters", method = "GET")
     @GetMapping
     public ResponseEntity<Pagination<ProductResponse>> findAll(@ModelAttribute ProductFilter productFilter, Pageable pageable) {
-        Page<ProductResponse> products = productService.findAll(productFilter, pageable);
-        return ResponseEntity.ok(Pagination.toPagination(products));
+        return ResponseEntity.ok(productService.findAll(productFilter, pageable));
     }
 
     @Operation(summary = "Get a Product by Id", method = "GET")

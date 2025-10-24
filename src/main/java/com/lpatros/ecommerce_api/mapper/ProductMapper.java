@@ -1,5 +1,6 @@
 package com.lpatros.ecommerce_api.mapper;
 
+import com.lpatros.ecommerce_api.configuration.Pagination;
 import com.lpatros.ecommerce_api.dto.productImage.ProductImageResponse;
 import com.lpatros.ecommerce_api.dto.product.ProductRequest;
 import com.lpatros.ecommerce_api.dto.product.ProductResponse;
@@ -43,8 +44,8 @@ public class ProductMapper {
         );
     }
 
-    public Page<ProductResponse> toResponsePage(Page<Product> products) {
-        return products.map(this::toResponse);
+    public Pagination<ProductResponse> toResponsePagination(Page<Product> products) {
+        return Pagination.toPagination(products.map(this::toResponse));
     }
 
     public Product toEntity(ProductRequest request, Category category) {

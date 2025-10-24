@@ -7,7 +7,6 @@ import com.lpatros.ecommerce_api.dto.user.UserResponse;
 import com.lpatros.ecommerce_api.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,8 +25,7 @@ public class UserController {
     @Operation(summary = "Get all Users with filters", method = "GET")
     @GetMapping
     public ResponseEntity<Pagination<UserResponse>> findAll(@ModelAttribute UserFilter userFilter, Pageable pageable) {
-        Page<UserResponse> users = userService.findAll(userFilter, pageable);
-        return ResponseEntity.ok(Pagination.toPagination(users));
+        return ResponseEntity.ok(userService.findAll(userFilter, pageable));
     }
 
     @Operation(summary = "Get User by ID", method = "GET")

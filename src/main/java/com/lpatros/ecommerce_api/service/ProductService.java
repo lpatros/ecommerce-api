@@ -1,5 +1,6 @@
 package com.lpatros.ecommerce_api.service;
 
+import com.lpatros.ecommerce_api.configuration.Pagination;
 import com.lpatros.ecommerce_api.dto.product.ProductFilter;
 import com.lpatros.ecommerce_api.dto.product.ProductRequest;
 import com.lpatros.ecommerce_api.dto.product.ProductResponse;
@@ -32,13 +33,14 @@ public class ProductService {
         this.productMapper = productMapper;
     }
 
-    public Page<ProductResponse> findAll(ProductFilter productFilter, Pageable pageable) {
+    public Pagination<ProductResponse> findAll(ProductFilter productFilter, Pageable pageable) {
 
-        Specification<Product> specification = ProductSpecification.filter(productFilter);
+        Specification<Product> notDeleted = ProductSpecification.isNotDeleted();
+        Specification<Product> specification = ProductSpecification.filter(productFilter).and(notDeleted);
 
         Page<Product> products = productRepository.findAll(specification, pageable);
 
-        return productMapper.toResponsePage(products);
+        return productMapper.toResponsePagination(products);
     }
 
     public ProductResponse findById(Long id) {
@@ -47,6 +49,10 @@ public class ProductService {
 
         if (product.isEmpty()) {
             throw new NotFoundException("Product", "id");
+        }
+
+        if (product.get().getDeleted()) {
+            throw new NotActiveException("Product");
         }
 
         return productMapper.toResponse(product.get());
