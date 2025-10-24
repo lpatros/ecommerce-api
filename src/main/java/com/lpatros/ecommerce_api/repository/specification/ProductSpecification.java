@@ -17,7 +17,8 @@ public class ProductSpecification {
             List<Predicate> predicates = new ArrayList<>();
 
             if (filter.getName() != null && !filter.getName().isEmpty()) {
-                predicates.add(cb.equal(root.get("name"), filter.getName()));
+                String namePattern = "%" + filter.getName().toLowerCase() + "%";
+                predicates.add(cb.like(cb.lower(root.get("name")), namePattern));
             }
 
             if (filter.getMinStock() != null) {

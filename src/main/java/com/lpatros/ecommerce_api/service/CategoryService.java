@@ -27,7 +27,7 @@ public class CategoryService {
 
     public List<CategoryResponse> findAll() {
         List<Category> categories = categoryRepository.findByOrderByIdAsc();
-        return categories.stream().map(categoryMapper::toResponse).toList();
+        return categoryMapper.toResponseList(categories);
     }
 
     public CategoryResponse findById(Long id) {

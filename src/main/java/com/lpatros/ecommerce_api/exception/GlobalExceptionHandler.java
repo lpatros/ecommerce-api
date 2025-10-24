@@ -83,7 +83,7 @@ public class GlobalExceptionHandler {
         RestErrorMessage restErrorMessage = new RestErrorMessage(
                 LocalDateTime.now(),
                 HttpStatus.BAD_REQUEST.value(),
-                "Corpo da requisicao invalido",
+                "Corpo da requisicao invalido, verifique a sintaxe",
                 null
         );
 

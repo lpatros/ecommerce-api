@@ -38,7 +38,7 @@ public class ProductService {
 
         Page<Product> products = productRepository.findAll(specification, pageable);
 
-        return products.map(productMapper::toResponse);
+        return productMapper.toResponsePage(products);
     }
 
     public ProductResponse findById(Long id) {

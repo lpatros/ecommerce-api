@@ -7,6 +7,7 @@ import com.lpatros.ecommerce_api.entity.Category;
 import com.lpatros.ecommerce_api.entity.ProductImage;
 import com.lpatros.ecommerce_api.entity.Product;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import java.util.List;
 
@@ -43,6 +44,10 @@ public class ProductMapper {
             product.getUpdatedAt(),
             categoryMapper.toResponse(product.getCategory())
         );
+    }
+
+    public Page<ProductResponse> toResponsePage(Page<Product> products) {
+        return products.map(this::toResponse);
     }
 
     public Product toEntity(ProductRequest request, Category category) {
