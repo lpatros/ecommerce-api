@@ -1,5 +1,6 @@
 package com.lpatros.ecommerce_api.controller;
 
+import com.lpatros.ecommerce_api.configuration.Pagination;
 import com.lpatros.ecommerce_api.dto.product.ProductFilter;
 import com.lpatros.ecommerce_api.dto.product.ProductRequest;
 import com.lpatros.ecommerce_api.dto.product.ProductResponse;
@@ -25,8 +26,9 @@ public class ProductController {
 
     @Operation(summary = "Get all Products with filters", method = "GET")
     @GetMapping
-    public ResponseEntity<Page<ProductResponse>> findAll(@ModelAttribute ProductFilter productFilter, Pageable pageable) {
-        return ResponseEntity.ok(productService.findAll(productFilter, pageable));
+    public ResponseEntity<Pagination<ProductResponse>> findAll(@ModelAttribute ProductFilter productFilter, Pageable pageable) {
+        Page<ProductResponse> products = productService.findAll(productFilter, pageable);
+        return ResponseEntity.ok(Pagination.toPagination(products));
     }
 
     @Operation(summary = "Get a Product by Id", method = "GET")

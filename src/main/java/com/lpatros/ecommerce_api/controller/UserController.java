@@ -1,5 +1,6 @@
 package com.lpatros.ecommerce_api.controller;
 
+import com.lpatros.ecommerce_api.configuration.Pagination;
 import com.lpatros.ecommerce_api.dto.user.UserFilter;
 import com.lpatros.ecommerce_api.dto.user.UserRequest;
 import com.lpatros.ecommerce_api.dto.user.UserResponse;
@@ -24,8 +25,9 @@ public class UserController {
 
     @Operation(summary = "Get all Users with filters", method = "GET")
     @GetMapping
-    public ResponseEntity<Page<UserResponse>> findAll(@ModelAttribute UserFilter userFilter, Pageable pageable) {
-        return ResponseEntity.ok(userService.findAll(userFilter, pageable));
+    public ResponseEntity<Pagination<UserResponse>> findAll(@ModelAttribute UserFilter userFilter, Pageable pageable) {
+        Page<UserResponse> users = userService.findAll(userFilter, pageable);
+        return ResponseEntity.ok(Pagination.toPagination(users));
     }
 
     @Operation(summary = "Get User by ID", method = "GET")

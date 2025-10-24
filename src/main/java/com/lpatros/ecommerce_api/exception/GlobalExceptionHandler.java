@@ -14,6 +14,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
@@ -65,7 +66,7 @@ public class GlobalExceptionHandler {
         RestErrorMessage restErrorMessage = new RestErrorMessage(
                 LocalDateTime.now(),
                 HttpStatus.BAD_REQUEST.value(),
-                "Erro de validacao",
+                "Validation failed for fields",
                 ex.getBindingResult().getFieldErrors().stream()
                         .collect(
                             Collectors.toMap(
@@ -83,7 +84,7 @@ public class GlobalExceptionHandler {
         RestErrorMessage restErrorMessage = new RestErrorMessage(
                 LocalDateTime.now(),
                 HttpStatus.BAD_REQUEST.value(),
-                "Corpo da requisicao invalido, verifique a sintaxe",
+                "Body of the request is invalid or malformed",
                 null
         );
 
@@ -93,7 +94,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<RestErrorMessage> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
 
-        String message = String.format("O %s recebeu um valor invalido: %s", ex.getName(), ex.getValue());
+        String message = String.format("The parameter '%s' with value '%s' could not be converted to type '%s'",
+                ex.getName(),
+                ex.getValue(),
+                ex.getRequiredType() != null ? ex.getRequiredType().getSimpleName() : "Unknown");
 
         RestErrorMessage restErrorMessage = new RestErrorMessage(
                 LocalDateTime.now(),
@@ -110,7 +114,7 @@ public class GlobalExceptionHandler {
         RestErrorMessage restErrorMessage = new RestErrorMessage(
                 LocalDateTime.now(),
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "Erro de acesso ao recurso de dados",
+                "Invalid data access resource usage",
                 null
         );
 
@@ -122,7 +126,7 @@ public class GlobalExceptionHandler {
         RestErrorMessage restErrorMessage = new RestErrorMessage(
                 LocalDateTime.now(),
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "Erro de violacao de integridade de dados",
+                "Violation of data integrity",
                 null
         );
 
@@ -134,10 +138,22 @@ public class GlobalExceptionHandler {
         RestErrorMessage restErrorMessage = new RestErrorMessage(
                 LocalDateTime.now(),
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "Erro de uso invalido da API de acesso a dados",
+                "Invalid data access API usage",
                 null
         );
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(restErrorMessage);
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<RestErrorMessage> handleNoResourceFoundException(NoResourceFoundException ex) {
+        RestErrorMessage restErrorMessage = new RestErrorMessage(
+                LocalDateTime.now(),
+                HttpStatus.NOT_FOUND.value(),
+                "No resource found",
+                null
+        );
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(restErrorMessage);
     }
 }

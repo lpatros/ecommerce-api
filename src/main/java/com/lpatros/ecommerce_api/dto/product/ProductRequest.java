@@ -16,20 +16,20 @@ import java.util.List;
 @NoArgsConstructor
 public class ProductRequest {
 
-    @NotBlank(message = "O nome do produto é obrigatório")
+    @NotBlank(message = "The name of the product is required")
     private String name;
 
     private String description;
 
-    @NotNull(message = "A quantidade em estoque do produto é obrigatória")
+    @NotNull(message = "The stock of the product is required")
     private Long stock;
 
-    @NotNull(message = "O preço do produto é obrigatório")
+    @NotNull(message = "The price of the product is required")
     private BigDecimal price;
 
-    @NotNull(message = "O produto deve conter ao menos uma imagem")
+    @NotNull(message = "The product must have at least one image")
     private List<ProductImageRequest> productImages;
 
-    @NotNull(message = "A categoria do produto é obrigatória")
+    @NotNull(message = "The category ID of the product is required")
     private Long categoryId;
 }

@@ -12,6 +12,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CategoryRequest {
 
-    @NotBlank(message = "O nome da categoria é obrigatório")
+    @NotBlank(message = "The name of the category is required")
     private String name;
 }

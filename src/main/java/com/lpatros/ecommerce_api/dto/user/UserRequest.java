@@ -14,23 +14,23 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class UserRequest {
 
-    @NotBlank(message = "O CPF é obrigatório")
+    @NotBlank(message = "The CPF of the user is required")
     private String cpf;
 
-    @NotBlank(message = "O nome é obrigatório")
+    @NotBlank(message = "The name of the user is required")
     private String name;
 
-    @NotBlank(message = "O número de telefone é obrigatório")
+    @NotBlank(message = "The phone number of the user is required")
     private String phoneNumber;
 
-    @NotBlank(message = "O email é obrigatório")
+    @NotBlank(message = "The email of the user is required")
     private String email;
 
-    @NotBlank(message = "A senha é obrigatória")
+    @NotBlank(message = "The password of the user is required")
     private String password;
 
     private String confirmPassword;
 
-    @NotNull(message = "A data de nascimento é obrigatória")
+    @NotNull(message = "The birth date of the user is required")
     private LocalDate birthDate;
 }
