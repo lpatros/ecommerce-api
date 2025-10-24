@@ -1,13 +1,12 @@
 package com.lpatros.ecommerce_api.dto.user;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -33,5 +32,5 @@ public class UserRequest {
     private String confirmPassword;
 
     @NotNull(message = "A data de nascimento é obrigatória")
-    private Date birthDate;
+    private LocalDate birthDate;
 }
