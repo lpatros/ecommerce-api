@@ -8,7 +8,7 @@ public class NotUniqueException extends RuntimeException {
     private final String field;
 
     public NotUniqueException(String name, String field) {
-        super(String.format("Já existe %s com o %s informado.", name, field));
+        super(String.format("%s already exists with the given %s.", name, field));
         this.name = name;
         this.field = field;
     }

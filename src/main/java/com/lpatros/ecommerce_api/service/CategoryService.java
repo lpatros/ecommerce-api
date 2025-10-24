@@ -35,7 +35,7 @@ public class CategoryService {
         Optional<Category> category = categoryRepository.findById(id);
 
         if (category.isEmpty()) {
-            throw new NotFoundException("Categoria", "id");
+            throw new NotFoundException("Category", "id");
         }
 
         return categoryMapper.toResponse(category.get());
@@ -47,7 +47,7 @@ public class CategoryService {
             List<Category> existingCategories = categoryRepository.findByName(categoryRequest.getName());
 
             if (!existingCategories.isEmpty()) {
-                throw new NotUniqueException("Categoria", "nome");
+                throw new NotUniqueException("Category", "name");
             }
 
             Category savedCategory = categoryRepository.save(category);
@@ -59,13 +59,13 @@ public class CategoryService {
         Optional<Category> category = categoryRepository.findById(id);
 
         if (category.isEmpty()) {
-            throw new NotFoundException("Categoria", "id");
+            throw new NotFoundException("Category", "id");
         }
 
         List<Category> existingCategories = categoryRepository.findByName(categoryRequest.getName());
 
         if (!existingCategories.isEmpty() && !existingCategories.getFirst().getId().equals(id)) {
-            throw new NotUniqueException("Categoria", "nome");
+            throw new NotUniqueException("Category", "name");
         }
 
         Category updatedCategory = categoryMapper.toEntity(categoryRequest);
@@ -79,11 +79,11 @@ public class CategoryService {
         Optional<Category> category = categoryRepository.findById(id);
 
         if (category.isEmpty()) {
-            throw new NotFoundException("Categoria", "id");
+            throw new NotFoundException("Category", "id");
         }
 
         if (category.get().getDeleted()) {
-            throw new NotActiveException(category.get().getName());
+            throw new NotActiveException("Category");
         }
 
         categoryRepository.disable(id);

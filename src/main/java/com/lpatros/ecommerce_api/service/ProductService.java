@@ -46,7 +46,7 @@ public class ProductService {
         Optional<Product> product = productRepository.findById(id);
 
         if (product.isEmpty()) {
-            throw new NotFoundException("Produto", "id");
+            throw new NotFoundException("Product", "id");
         }
 
         return productMapper.toResponse(product.get());
@@ -57,7 +57,7 @@ public class ProductService {
         Optional<Category> category = categoryRepository.findById(productRequest.getCategoryId());
 
         if (category.isEmpty()) {
-            throw new NotFoundException("Categoria", "id");
+            throw new NotFoundException("Category", "id");
         }
 
         Product product = productMapper.toEntity(productRequest, category.get());
@@ -72,13 +72,13 @@ public class ProductService {
         Optional<Product> product = productRepository.findById(id);
 
         if (product.isEmpty()) {
-            throw new NotFoundException("Produto", "id");
+            throw new NotFoundException("Product", "id");
         }
 
         Optional<Category> category = categoryRepository.findById(productRequest.getCategoryId());
 
         if (category.isEmpty()) {
-            throw new NotFoundException("Categoria", "id");
+            throw new NotFoundException("Category", "id");
         }
 
         Product updatedProduct = productMapper.toEntity(productRequest, category.get());
@@ -93,11 +93,11 @@ public class ProductService {
         Optional<Product> product = productRepository.findById(id);
 
         if (product.isEmpty()) {
-            throw new NotFoundException("Produto", "id");
+            throw new NotFoundException("Product", "id");
         }
 
         if (product.get().getDeleted()) {
-            throw new NotActiveException(product.get().getName());
+            throw new NotActiveException("Product");
         }
 
         productRepository.disable(id);

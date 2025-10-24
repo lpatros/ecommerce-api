@@ -16,6 +16,12 @@ public class ProductImagesMapper {
         );
     }
 
+    public List<ProductImageResponse> toResponseList(List<ProductImage> productImages) {
+        return productImages.stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
     public ProductImage toEntity(ProductImageRequest productImageRequest) {
         return new ProductImage(
                 null,

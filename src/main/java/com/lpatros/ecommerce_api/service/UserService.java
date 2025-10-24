@@ -4,6 +4,7 @@ import com.lpatros.ecommerce_api.dto.user.UserFilter;
 import com.lpatros.ecommerce_api.dto.user.UserRequest;
 import com.lpatros.ecommerce_api.dto.user.UserResponse;
 import com.lpatros.ecommerce_api.entity.User;
+import com.lpatros.ecommerce_api.exception.FieldsNotMatchException;
 import com.lpatros.ecommerce_api.exception.NotActiveException;
 import com.lpatros.ecommerce_api.exception.NotFoundException;
 import com.lpatros.ecommerce_api.exception.NotUniqueException;
@@ -44,7 +45,7 @@ public class UserService {
         Optional<User> user = userRepository.findById(id);
 
         if (user.isEmpty()) {
-            throw new NotFoundException("Usuario", "id");
+            throw new NotFoundException("User", "id");
         }
 
         return userMapper.toResponse(user.get());
@@ -56,23 +57,23 @@ public class UserService {
         List<User> existingUsersWithCpf = userRepository.findUsersByCpf(userRequest.getCpf());
 
         if (!existingUsersWithCpf.isEmpty()) {
-            throw new NotUniqueException("Usuario", "CPF");
+            throw new NotUniqueException("User", "CPF");
         }
 
         List<User> existingUsersWithPhoneNumber = userRepository.findUsersByPhoneNumber(userRequest.getPhoneNumber());
 
         if (!existingUsersWithPhoneNumber.isEmpty()) {
-            throw new NotUniqueException("Usuario", "telefone");
+            throw new NotUniqueException("User", "phone number");
         }
 
         List<User> existingUsersWithEmail = userRepository.findUsersByEmail(userRequest.getEmail());
 
         if (!existingUsersWithEmail.isEmpty()) {
-            throw new NotUniqueException("Usuario", "email");
+            throw new NotUniqueException("User", "email");
         }
 
         if (!userRequest.getPassword().equals(userRequest.getConfirmPassword())) {
-            throw new IllegalArgumentException("A senha e a confirmação de senha não coincidem.");
+            throw new FieldsNotMatchException("password", "confirm password");
         }
 
         User savedUser = userRepository.save(user);
@@ -85,7 +86,7 @@ public class UserService {
         Optional<User> user = userRepository.findById(id);
 
         if (user.isEmpty()) {
-            throw new NotFoundException("Usuario", "id");
+            throw new NotFoundException("User", "id");
         }
 
         User updatedUser = userMapper.toEntity(userRequest);
@@ -100,11 +101,11 @@ public class UserService {
         Optional<User> user = userRepository.findById(id);
 
         if (user.isEmpty()) {
-            throw new NotFoundException("Usuario", "id");
+            throw new NotFoundException("User", "id");
         }
 
         if (user.get().getDeleted()) {
-            throw new NotActiveException(user.get().getName());
+            throw new NotActiveException("User");
         }
 
         userRepository.disable(id);

@@ -9,7 +9,7 @@ public class NotFoundException extends RuntimeException {
     private final String field;
 
     public NotFoundException(String name, String field) {
-        super(String.format("%s nao encontrado com o %s informado", name, field));
+        super(String.format("%s not found with the %s", name, field));
         this.name = name;
         this.field = field;
     }

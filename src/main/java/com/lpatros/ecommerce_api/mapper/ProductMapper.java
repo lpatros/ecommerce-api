@@ -27,10 +27,7 @@ public class ProductMapper {
 
         List<ProductImageResponse> productImageResponsesList = 
             (product.getProductImages() != null && !product.getProductImages().isEmpty()) 
-                ? product.getProductImages()
-                    .stream()
-                    .map(productImagesMapper::toResponse)
-                    .toList()
+                ? productImagesMapper.toResponseList(product.getProductImages())
                 : List.of();
 
         return new ProductResponse(
