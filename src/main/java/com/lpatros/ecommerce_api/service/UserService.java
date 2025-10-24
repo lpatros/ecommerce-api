@@ -4,6 +4,7 @@ import com.lpatros.ecommerce_api.dto.user.UserFilter;
 import com.lpatros.ecommerce_api.dto.user.UserRequest;
 import com.lpatros.ecommerce_api.dto.user.UserResponse;
 import com.lpatros.ecommerce_api.entity.User;
+import com.lpatros.ecommerce_api.exception.NotActiveException;
 import com.lpatros.ecommerce_api.exception.NotFoundException;
 import com.lpatros.ecommerce_api.exception.NotUniqueException;
 import com.lpatros.ecommerce_api.mapper.UserMapper;
@@ -77,5 +78,35 @@ public class UserService {
         User savedUser = userRepository.save(user);
 
         return userMapper.toResponse(savedUser);
+    }
+
+    public UserResponse update(Long id, UserRequest userRequest) {
+
+        Optional<User> user = userRepository.findById(id);
+
+        if (user.isEmpty()) {
+            throw new NotFoundException("Usuario", "id");
+        }
+
+        User updatedUser = userMapper.toEntity(userRequest);
+        updatedUser.setId(id);
+        updatedUser.setCreatedAt(user.get().getCreatedAt());
+
+        return userMapper.toResponse(userRepository.save(updatedUser));
+    }
+
+    public void delete(Long id) {
+
+        Optional<User> user = userRepository.findById(id);
+
+        if (user.isEmpty()) {
+            throw new NotFoundException("Usuario", "id");
+        }
+
+        if (user.get().getDeleted()) {
+            throw new NotActiveException(user.get().getName());
+        }
+
+        userRepository.disable(id);
     }
 }

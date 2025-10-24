@@ -39,4 +39,17 @@ public class UserController {
     public ResponseEntity<UserResponse> create(@RequestBody UserRequest userRequest) {
         return ResponseEntity.ok(userService.create(userRequest));
     }
+
+    @Operation(summary = "Update a User by Id", method = "PUT")
+    @PutMapping("/{id}")
+    public ResponseEntity<UserResponse> update(@PathVariable Long id, @RequestBody UserRequest userRequest) {
+        return ResponseEntity.ok(userService.update(id, userRequest));
+    }
+
+    @Operation(summary = "Delete a User by Id", method = "DELETE")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        userService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }
