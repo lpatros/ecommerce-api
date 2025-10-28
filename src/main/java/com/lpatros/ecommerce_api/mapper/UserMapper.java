@@ -3,7 +3,6 @@ package com.lpatros.ecommerce_api.mapper;
 import com.lpatros.ecommerce_api.configuration.Pagination;
 import com.lpatros.ecommerce_api.dto.address.AddressResponse;
 import com.lpatros.ecommerce_api.dto.phoneNumber.PhoneNumberResponse;
-import com.lpatros.ecommerce_api.dto.productImage.ProductImageResponse;
 import com.lpatros.ecommerce_api.dto.user.UserRequest;
 import com.lpatros.ecommerce_api.dto.user.UserResponse;
 import com.lpatros.ecommerce_api.entity.Address;

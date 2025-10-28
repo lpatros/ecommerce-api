@@ -26,12 +26,18 @@ public class PhoneNumberMapper {
     }
 
     public PhoneNumber toEntity(PhoneNumberRequest phoneNumberRequest) {
+
+        Long id = phoneNumberRequest.getId() != null
+            ? phoneNumberRequest.getId()
+            : null;
+
         return new PhoneNumber(
-            null,
+            id,
             phoneNumberRequest.getCountryCode(),
             phoneNumberRequest.getAreaCode(),
             phoneNumberRequest.getNumber(),
-            null
+            null,
+            Boolean.FALSE
         );
     }
 

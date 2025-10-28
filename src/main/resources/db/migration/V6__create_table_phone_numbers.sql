@@ -4,5 +4,5 @@ CREATE TABLE IF NOT EXISTS phone_numbers (
     area_code VARCHAR(10) NOT NULL,
     number VARCHAR(20) NOT NULL,
     user_id BIGINT REFERENCES users(id) ON DELETE CASCADE,
-    constraint unique_phone_number UNIQUE (country_code, area_code, number)
+    deleted BOOLEAN DEFAULT FALSE
 )

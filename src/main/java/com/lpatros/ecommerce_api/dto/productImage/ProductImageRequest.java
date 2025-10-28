@@ -12,6 +12,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ProductImageRequest {
 
+    private Long id;
+
     @NotBlank(message = "The URL of the product image is required")
     private String url;
 

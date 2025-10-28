@@ -7,8 +7,5 @@ CREATE TABLE IF NOT EXISTS products (
     category_id BIGINT REFERENCES categories(id),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    constraint positive_stock CHECK (stock >= 0),
-    constraint positive_price CHECK (price >= 0),
-    constraint unique_product_name UNIQUE (name)
+    deleted BOOLEAN NOT NULL DEFAULT FALSE
 );

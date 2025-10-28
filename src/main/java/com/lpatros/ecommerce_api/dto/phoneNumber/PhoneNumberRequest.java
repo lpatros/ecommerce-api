@@ -12,6 +12,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class PhoneNumberRequest {
 
+    private Long id;
+
     @NotBlank(message = "Country code is required")
     private String countryCode;
 

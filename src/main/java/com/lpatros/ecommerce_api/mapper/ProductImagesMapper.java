@@ -11,6 +11,7 @@ public class ProductImagesMapper {
 
     public ProductImageResponse toResponse(ProductImage productImage) {
         return new ProductImageResponse(
+                productImage.getId(),
                 productImage.getUrl(),
                 productImage.getIsCover()
         );
@@ -23,11 +24,17 @@ public class ProductImagesMapper {
     }
 
     public ProductImage toEntity(ProductImageRequest productImageRequest) {
+
+        Long id = productImageRequest.getId() != null
+                ? productImageRequest.getId()
+                : null;
+
         return new ProductImage(
-                null,
+                id,
                 null,
                 productImageRequest.getUrl(),
-                (productImageRequest.getIsCover() != null) ? productImageRequest.getIsCover() : Boolean.FALSE
+                (productImageRequest.getIsCover() != null) ? productImageRequest.getIsCover() : Boolean.FALSE,
+                Boolean.FALSE
         );
     }
 

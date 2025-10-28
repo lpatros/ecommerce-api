@@ -7,5 +7,6 @@ CREATE TABLE IF NOT EXISTS addresses (
     neighborhood VARCHAR(100) NOT NULL,
     city VARCHAR(100) NOT NULL,
     state VARCHAR(100) NOT NULL,
-    user_id BIGINT REFERENCES users(id) ON DELETE CASCADE
+    user_id BIGINT REFERENCES users(id) ON DELETE CASCADE,
+    deleted BOOLEAN DEFAULT FALSE
 )

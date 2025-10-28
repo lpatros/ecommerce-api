@@ -30,8 +30,13 @@ public class AddressMapper {
     }
 
     public Address toEntity(AddressRequest addressRequest) {
+
+        Long id = addressRequest.getId() != null
+            ? addressRequest.getId()
+            : null;
+
         return new Address(
-            null,
+            id,
             addressRequest.getStreet(),
             addressRequest.getNumber(),
             addressRequest.getComplement(),
@@ -39,7 +44,8 @@ public class AddressMapper {
             addressRequest.getNeighborhood(),
             addressRequest.getCity(),
             addressRequest.getState(),
-            null
+            null,
+            Boolean.FALSE
         );
     }
 

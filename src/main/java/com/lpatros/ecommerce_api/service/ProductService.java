@@ -79,6 +79,8 @@ public class ProductService {
         updatedProduct.setId(id);
         updatedProduct.setCreatedAt(product.getCreatedAt());
 
+        //TODO: Ajustar para manter imagens existentes + novas imagens
+
         return productMapper.toResponse(productRepository.save(updatedProduct));
     }
 

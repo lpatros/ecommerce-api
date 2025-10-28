@@ -5,14 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Entity
-@Table(
-        name = "phone_numbers",
-        uniqueConstraints = @UniqueConstraint(
-                columnNames = {"countryCode", "areaCode", "number"}
-        )
-)
+@Table(name = "phone_numbers")
+@SQLDelete(sql = "UPDATE phone_numbers SET deleted = true WHERE id = ?")
+@SQLRestriction("deleted = false")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -35,4 +34,7 @@ public class PhoneNumber {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private Boolean deleted;
 }

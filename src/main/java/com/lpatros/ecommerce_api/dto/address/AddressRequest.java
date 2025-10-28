@@ -12,6 +12,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class AddressRequest {
 
+    private Long id;
+
     @NotBlank(message = "The street field is required.")
     private String street;
 
