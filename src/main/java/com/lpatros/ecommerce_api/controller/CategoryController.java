@@ -23,7 +23,7 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    @Operation(summary = "Get all Categories by status", method = "GET")
+    @Operation(summary = "Get all Categories with filters", method = "GET")
     @GetMapping
     public ResponseEntity<Pagination<CategoryResponse>> findAll(@ModelAttribute CategoryFilter categoryFilter, Pageable pageable) {
         return ResponseEntity.ok(categoryService.findAll(categoryFilter, pageable));

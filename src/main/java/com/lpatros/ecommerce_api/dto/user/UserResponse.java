@@ -1,6 +1,7 @@
 package com.lpatros.ecommerce_api.dto.user;
 
 import com.lpatros.ecommerce_api.dto.address.AddressResponse;
+import com.lpatros.ecommerce_api.dto.phoneNumber.PhoneNumberResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +18,7 @@ public class UserResponse {
     private Long id;
     private String cpf;
     private String name;
-    private String phoneNumber;
+    private List<PhoneNumberResponse> phoneNumbers;
     private String email;
     private LocalDate birthDate;
     private List<AddressResponse> addresses;

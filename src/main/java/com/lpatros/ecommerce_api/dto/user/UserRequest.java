@@ -1,6 +1,7 @@
 package com.lpatros.ecommerce_api.dto.user;
 
 import com.lpatros.ecommerce_api.dto.address.AddressRequest;
+import com.lpatros.ecommerce_api.dto.phoneNumber.PhoneNumberRequest;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -23,7 +24,7 @@ public class UserRequest {
     private String name;
 
     @NotBlank(message = "The phone number of the user is required")
-    private String phoneNumber;
+    private List<PhoneNumberRequest> phoneNumbers;
 
     @NotBlank(message = "The email of the user is required")
     private String email;

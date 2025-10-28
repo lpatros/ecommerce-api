@@ -6,12 +6,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Table(name = "users")
+@SQLDelete(sql = "UPDATE users SET deleted = true WHERE id = ?")
+@SQLRestriction("deleted = false")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -28,8 +33,8 @@ public class User {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false, unique = true)
-    private String phoneNumber;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<PhoneNumber> phoneNumber;
 
     @Column(nullable = false, unique = true)
     private String email;

@@ -1,6 +1,7 @@
 package com.lpatros.ecommerce_api.service;
 
 import com.lpatros.ecommerce_api.configuration.Pagination;
+import com.lpatros.ecommerce_api.dto.phoneNumber.PhoneNumberRequest;
 import com.lpatros.ecommerce_api.dto.user.UserFilter;
 import com.lpatros.ecommerce_api.dto.user.UserRequest;
 import com.lpatros.ecommerce_api.dto.user.UserResponse;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -34,8 +36,7 @@ public class UserService {
 
     public Pagination<UserResponse> findAll(UserFilter userFilter, Pageable pageable) {
 
-        Specification<User> notDeleted = UserSpecification.isNotDeleted();
-        Specification<User> specification = UserSpecification.filter(userFilter).and(notDeleted);
+        Specification<User> specification = UserSpecification.filter(userFilter);
 
         Page<User> users = userRepository.findAll(specification, pageable);
 
@@ -58,46 +59,33 @@ public class UserService {
     }
 
     public UserResponse create(UserRequest userRequest) {
+
         User user = userMapper.toEntity(userRequest);
-
-        List<User> existingUsersWithCpf = userRepository.findUsersByCpf(userRequest.getCpf());
-
-        if (!existingUsersWithCpf.isEmpty()) {
-            throw new NotUniqueException("User", "CPF");
-        }
-
-        List<User> existingUsersWithPhoneNumber = userRepository.findUsersByPhoneNumber(userRequest.getPhoneNumber());
-
-        if (!existingUsersWithPhoneNumber.isEmpty()) {
-            throw new NotUniqueException("User", "phone number");
-        }
-
-        List<User> existingUsersWithEmail = userRepository.findUsersByEmail(userRequest.getEmail());
-
-        if (!existingUsersWithEmail.isEmpty()) {
-            throw new NotUniqueException("User", "email");
-        }
+        validateCPFUniqueness(userRequest.getCpf());
+        validateEmailUniqueness(userRequest.getEmail(), null);
+        validatePhoneNumberUniqueness(userRequest.getPhoneNumbers(), null);
 
         if (!userRequest.getPassword().equals(userRequest.getConfirmPassword())) {
             throw new FieldsNotMatchException("password", "confirm password");
         }
 
-        User savedUser = userRepository.save(user);
-
-        return userMapper.toResponse(savedUser);
+        return userMapper.toResponse(userRepository.save(user));
     }
 
     public UserResponse update(Long id, UserRequest userRequest) {
 
         Optional<User> user = userRepository.findById(id);
-
         if (user.isEmpty()) {
             throw new NotFoundException("User", "id");
         }
+        validateEmailUniqueness(userRequest.getEmail(), id);
+        validatePhoneNumberUniqueness(userRequest.getPhoneNumbers(), id);
 
         User updatedUser = userMapper.toEntity(userRequest);
         updatedUser.setId(id);
         updatedUser.setCreatedAt(user.get().getCreatedAt());
+
+        //TODO: Ajustar para manter telefones e endereços existentes
 
         return userMapper.toResponse(userRepository.save(updatedUser));
     }
@@ -114,6 +102,57 @@ public class UserService {
             throw new NotActiveException("User");
         }
 
-        userRepository.disable(id);
+        userRepository.deleteById(id);
+    }
+
+    private void validateCPFUniqueness(String cpf) {
+        boolean exists = userRepository.existsByCpf(cpf);
+        if (exists) {
+            throw new NotUniqueException("User", "CPF");
+        }
+    }
+
+    private void validateEmailUniqueness(String email, Long userIdToIgnore) {
+        if (userIdToIgnore == null) {
+            boolean exists = userRepository.existsByEmail(email);
+            if (exists) {
+                throw new NotUniqueException("User", "email");
+            }
+        }
+
+        if (userIdToIgnore != null) {
+            boolean exists = userRepository.existsByEmailAndIdNot(email, userIdToIgnore);
+            if (exists) {
+                throw new NotUniqueException("User", "email");
+            }
+        }
+    }
+
+    private void validatePhoneNumberUniqueness(List<PhoneNumberRequest> phoneNumberRequests, Long userIdToIgnore) {
+        for (PhoneNumberRequest phoneNumberRequest : phoneNumberRequests) {
+
+            if (userIdToIgnore == null) {
+                boolean exists = userRepository.existsByPhoneNumber_CountryCodeAndPhoneNumber_AreaCodeAndPhoneNumber_Number(
+                        phoneNumberRequest.getCountryCode(),
+                        phoneNumberRequest.getAreaCode(),
+                        phoneNumberRequest.getNumber()
+                );
+                if (exists) {
+                    throw new NotUniqueException("User", "phone number");
+                }
+            }
+
+            if (userIdToIgnore != null) {
+                boolean exists = userRepository.existsByPhoneNumber_CountryCodeAndPhoneNumber_AreaCodeAndPhoneNumber_NumberAndIdNot(
+                        phoneNumberRequest.getCountryCode(),
+                        phoneNumberRequest.getAreaCode(),
+                        phoneNumberRequest.getNumber(),
+                        userIdToIgnore
+                );
+                if (exists) {
+                    throw new NotUniqueException("User", "phone number");
+                }
+            }
+        }
     }
 }

@@ -33,8 +33,4 @@ public class UserSpecification {
             return cb.and(predicates.toArray(new Predicate[0]));
         };
     }
-
-    public static Specification<User> isNotDeleted() {
-        return (root, query, cb) -> cb.isFalse(root.get("deleted"));
-    }
 }
