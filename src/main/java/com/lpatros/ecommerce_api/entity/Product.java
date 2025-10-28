@@ -1,17 +1,18 @@
 package com.lpatros.ecommerce_api.entity;
 
 import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Table;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Table(name = "products")
+@SQLDelete(sql = "UPDATE products SET deleted = TRUE WHERE id = ?")
+@SQLRestriction("deleted = FALSE")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -22,13 +23,13 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
     private String description;
 
     @Column(nullable = false)
-    private Long stock;
+    private Integer stock;
 
     @Column(nullable = false)
     private BigDecimal price;

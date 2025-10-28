@@ -12,6 +12,7 @@ import com.lpatros.ecommerce_api.mapper.ProductMapper;
 import com.lpatros.ecommerce_api.repository.CategoryRepository;
 import com.lpatros.ecommerce_api.repository.ProductRepository;
 import com.lpatros.ecommerce_api.repository.specification.ProductSpecification;
+import com.lpatros.ecommerce_api.validator.ProductValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,12 +23,14 @@ import java.util.Optional;
 @Service
 public class ProductService {
 
+    private final ProductValidator productValidator;
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final ProductMapper productMapper;
 
     @Autowired
-    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, ProductMapper productMapper) {
+    public ProductService(ProductValidator productValidator,ProductRepository productRepository, CategoryRepository categoryRepository, ProductMapper productMapper) {
+        this.productValidator = productValidator;
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
         this.productMapper = productMapper;
@@ -35,8 +38,7 @@ public class ProductService {
 
     public Pagination<ProductResponse> findAll(ProductFilter productFilter, Pageable pageable) {
 
-        Specification<Product> notDeleted = ProductSpecification.isNotDeleted();
-        Specification<Product> specification = ProductSpecification.filter(productFilter).and(notDeleted);
+        Specification<Product> specification = ProductSpecification.filter(productFilter);
 
         Page<Product> products = productRepository.findAll(specification, pageable);
 
@@ -45,67 +47,46 @@ public class ProductService {
 
     public ProductResponse findById(Long id) {
 
-        Optional<Product> product = productRepository.findById(id);
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Product", "id"));
 
-        if (product.isEmpty()) {
-            throw new NotFoundException("Product", "id");
-        }
-
-        if (product.get().getDeleted()) {
-            throw new NotActiveException("Product");
-        }
-
-        return productMapper.toResponse(product.get());
+        return productMapper.toResponse(product);
     }
 
     public ProductResponse create(ProductRequest productRequest) {
 
-        Optional<Category> category = categoryRepository.findById(productRequest.getCategoryId());
+        Category category = categoryRepository.findById(productRequest.getCategoryId())
+                .orElseThrow(() -> new NotFoundException("Category", "id"));
 
-        if (category.isEmpty()) {
-            throw new NotFoundException("Category", "id");
-        }
+        productValidator.validateCreate(productRequest);
 
-        Product product = productMapper.toEntity(productRequest, category.get());
+        Product product = productMapper.toEntity(productRequest, category);
 
-        Product savedProduct = productRepository.save(product);
-
-        return productMapper.toResponse(savedProduct);
+        return productMapper.toResponse(productRepository.save(product));
     }
 
     public ProductResponse update(Long id, ProductRequest productRequest) {
 
-        Optional<Product> product = productRepository.findById(id);
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Product", "id"));
 
-        if (product.isEmpty()) {
-            throw new NotFoundException("Product", "id");
-        }
+        Category category = categoryRepository.findById(productRequest.getCategoryId())
+                .orElseThrow(() -> new NotFoundException("Category", "id"));
 
-        Optional<Category> category = categoryRepository.findById(productRequest.getCategoryId());
+        productValidator.validateUpdate(productRequest, id);
 
-        if (category.isEmpty()) {
-            throw new NotFoundException("Category", "id");
-        }
-
-        Product updatedProduct = productMapper.toEntity(productRequest, category.get());
+        Product updatedProduct = productMapper.toEntity(productRequest, category);
         updatedProduct.setId(id);
-        updatedProduct.setCreatedAt(product.get().getCreatedAt());
+        updatedProduct.setCreatedAt(product.getCreatedAt());
 
         return productMapper.toResponse(productRepository.save(updatedProduct));
     }
 
     public void delete(Long id) {
 
-        Optional<Product> product = productRepository.findById(id);
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Product", "id"));
 
-        if (product.isEmpty()) {
-            throw new NotFoundException("Product", "id");
-        }
-
-        if (product.get().getDeleted()) {
-            throw new NotActiveException("Product");
-        }
-
-        productRepository.disable(id);
+        productRepository.deleteById(id);
     }
 }

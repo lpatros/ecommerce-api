@@ -22,7 +22,7 @@ public class ProductRequest {
     private String description;
 
     @NotNull(message = "The stock of the product is required")
-    private Long stock;
+    private Integer stock;
 
     @NotNull(message = "The price of the product is required")
     private BigDecimal price;

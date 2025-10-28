@@ -23,7 +23,7 @@ public class UserValidator {
         validateCPFUnique(userRequest.getCpf());
         validateEmailUnique(userRequest.getEmail(), null);
         validatePhoneNumberUnique(userRequest.getPhoneNumbers(), null);
-        validatePasswordCombination(userRequest);
+        validatePasswordCombination(userRequest.getPassword(), userRequest.getConfirmPassword());
     }
 
     public void validateUpdate(UserRequest userRequest, Long userId) {
@@ -46,7 +46,7 @@ public class UserValidator {
             exists = userRepository.existsByEmailAndIdNot(email, idToIgnore);
         }
         if (exists) {
-            throw new IllegalArgumentException("Email must be unique");
+            throw new NotUniqueException("User", "Email");
         }
     }
 
@@ -76,8 +76,8 @@ public class UserValidator {
         }
     }
 
-    private void validatePasswordCombination(UserRequest userRequest) {
-        if (!userRequest.getPassword().equals(userRequest.getConfirmPassword())) {
+    private void validatePasswordCombination(String password, String confirmPassword) {
+        if (!password.equals(confirmPassword)) {
             throw new FieldsNotMatchException("password", "confirm password");
         }
     }

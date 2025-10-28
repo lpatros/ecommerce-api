@@ -5,36 +5,34 @@ import com.lpatros.ecommerce_api.dto.category.CategoryFilter;
 import com.lpatros.ecommerce_api.dto.category.CategoryRequest;
 import com.lpatros.ecommerce_api.dto.category.CategoryResponse;
 import com.lpatros.ecommerce_api.entity.Category;
-import com.lpatros.ecommerce_api.exception.NotActiveException;
 import com.lpatros.ecommerce_api.exception.NotFoundException;
-import com.lpatros.ecommerce_api.exception.NotUniqueException;
 import com.lpatros.ecommerce_api.mapper.CategoryMapper;
 import com.lpatros.ecommerce_api.repository.CategoryRepository;
 import com.lpatros.ecommerce_api.repository.specification.CategorySpecification;
+import com.lpatros.ecommerce_api.validator.CategoryValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CategoryService {
 
+    private final CategoryValidator categoryValidator;
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
 
     @Autowired
-    public CategoryService(CategoryRepository categoryRepository, CategoryMapper categoryMapper) {
+    public CategoryService(CategoryValidator categoryValidator, CategoryRepository categoryRepository, CategoryMapper categoryMapper) {
+        this.categoryValidator = categoryValidator;
         this.categoryRepository = categoryRepository;
         this.categoryMapper = categoryMapper;
     }
 
     public Pagination<CategoryResponse> findAll(CategoryFilter categoryFilter, Pageable pageable) {
 
-        Specification<Category> notDeleted = CategorySpecification.isNotDeleted();
-        Specification<Category> specification = CategorySpecification.filter(categoryFilter).and(notDeleted);
+        Specification<Category> specification = CategorySpecification.filter(categoryFilter);
 
         Page<Category> categories = categoryRepository.findAll(specification, pageable);
 
@@ -43,45 +41,27 @@ public class CategoryService {
 
     public CategoryResponse findById(Long id) {
 
-        Optional<Category> category = categoryRepository.findById(id);
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Category", "id"));
 
-        if (category.isEmpty()) {
-            throw new NotFoundException("Category", "id");
-        }
-
-        if (category.get().getDeleted()) {
-            throw new NotActiveException("Category");
-        }
-
-        return categoryMapper.toResponse(category.get());
+        return categoryMapper.toResponse(category);
     }
 
     public CategoryResponse create(CategoryRequest categoryRequest) {
+
             Category category = categoryMapper.toEntity(categoryRequest);
 
-            List<Category> existingCategories = categoryRepository.findByName(categoryRequest.getName());
+            categoryValidator.validateCreate(categoryRequest);
 
-            if (!existingCategories.isEmpty()) {
-                throw new NotUniqueException("Category", "name");
-            }
-
-            Category savedCategory = categoryRepository.save(category);
-
-            return categoryMapper.toResponse(savedCategory);
+            return categoryMapper.toResponse(categoryRepository.save(category));
     }
 
     public CategoryResponse update(Long id, CategoryRequest categoryRequest) {
-        Optional<Category> category = categoryRepository.findById(id);
 
-        if (category.isEmpty()) {
-            throw new NotFoundException("Category", "id");
-        }
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Category", "id"));
 
-        List<Category> existingCategories = categoryRepository.findByName(categoryRequest.getName());
-
-        if (!existingCategories.isEmpty() && !existingCategories.getFirst().getId().equals(id)) {
-            throw new NotUniqueException("Category", "name");
-        }
+        categoryValidator.validateUpdate(categoryRequest, id);
 
         Category updatedCategory = categoryMapper.toEntity(categoryRequest);
         updatedCategory.setId(id);
@@ -91,16 +71,9 @@ public class CategoryService {
 
     public void delete(Long id) {
 
-        Optional<Category> category = categoryRepository.findById(id);
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Category", "id"));
 
-        if (category.isEmpty()) {
-            throw new NotFoundException("Category", "id");
-        }
-
-        if (category.get().getDeleted()) {
-            throw new NotActiveException("Category");
-        }
-
-        categoryRepository.disable(id);
+        categoryRepository.deleteById(id);
     }
 }

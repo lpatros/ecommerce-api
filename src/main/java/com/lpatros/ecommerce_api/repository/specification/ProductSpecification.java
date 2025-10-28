@@ -45,8 +45,4 @@ public class ProductSpecification {
             return cb.and(predicates.toArray(new Predicate[0]));
         };
     }
-
-    public static Specification<Product> isNotDeleted() {
-        return (root, query, cb) -> cb.isFalse(root.get("deleted"));
-    }
 }

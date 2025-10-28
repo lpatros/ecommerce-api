@@ -9,8 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
 
-    @Modifying
-    @Transactional
-    @Query("UPDATE Product p SET p.deleted = true WHERE p.id = :id")
-    void disable(Long id);
+    boolean existsByName(String name);
+
+    boolean existsByNameAndIdNot(String name, Long id);
 }

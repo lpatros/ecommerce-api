@@ -6,5 +6,6 @@ CREATE TABLE IF NOT EXISTS users (
     password VARCHAR(250) NOT NULL,
     birth_date DATE NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    deleted BOOLEAN NOT NULL DEFAULT FALSE
+    deleted BOOLEAN NOT NULL DEFAULT FALSE,
+    constraint unique_cpf_email UNIQUE (cpf, email)
 )
