@@ -1,18 +1,12 @@
 package com.lpatros.ecommerce_api.mapper;
 
 import com.lpatros.ecommerce_api.configuration.Pagination;
-import com.lpatros.ecommerce_api.dto.address.AddressResponse;
-import com.lpatros.ecommerce_api.dto.phoneNumber.PhoneNumberResponse;
 import com.lpatros.ecommerce_api.dto.user.UserRequest;
 import com.lpatros.ecommerce_api.dto.user.UserResponse;
-import com.lpatros.ecommerce_api.entity.Address;
-import com.lpatros.ecommerce_api.entity.PhoneNumber;
 import com.lpatros.ecommerce_api.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 public class UserMapper {
@@ -27,25 +21,14 @@ public class UserMapper {
     }
 
     public UserResponse toResponse(User user) {
-
-        List<PhoneNumberResponse> phoneNumberResponses =
-                (user.getPhoneNumber() != null && !user.getPhoneNumber().isEmpty())
-                        ? phoneNumberMapper.toResponseList(user.getPhoneNumber())
-                        : List.of();
-
-        List<AddressResponse> addressResponses =
-                (user.getAddresses() != null && !user.getAddresses().isEmpty())
-                        ? addressMapper.toResponseList(user.getAddresses())
-                        : List.of();
-
         return new UserResponse(
                 user.getId(),
                 user.getCpf(),
                 user.getName(),
-                phoneNumberResponses,
+                phoneNumberMapper.toResponseList(user.getPhoneNumber()),
                 user.getEmail(),
                 user.getBirthDate(),
-                addressResponses,
+                addressMapper.toResponseList(user.getAddresses()),
                 user.getCreatedAt()
         );
     }
@@ -55,28 +38,17 @@ public class UserMapper {
     }
 
     public User toEntity(UserRequest userRequest) {
-
-        User user = new User(
+        return new User(
                 null,
                 userRequest.getCpf(),
                 userRequest.getName(),
-                null,
+                phoneNumberMapper.toEntityList(userRequest.getPhoneNumbers()),
                 userRequest.getEmail(),
                 userRequest.getPassword(),
                 userRequest.getBirthDate(),
-                null,
+                addressMapper.toEntityList(userRequest.getAddresses()),
                 null,
                 Boolean.FALSE
         );
-
-        List<PhoneNumber> phoneNumbers = phoneNumberMapper.toEntityList(userRequest.getPhoneNumbers());
-        phoneNumbers.forEach(phoneNumber -> phoneNumber.setUser(user));
-        user.setPhoneNumber(phoneNumbers);
-
-        List<Address> addresses = addressMapper.toEntityList(userRequest.getAddresses());
-        addresses.forEach(address -> address.setUser(user));
-        user.setAddresses(addresses);
-
-        return user;
     }
 }

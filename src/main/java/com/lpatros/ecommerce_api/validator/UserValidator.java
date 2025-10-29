@@ -29,15 +29,11 @@ public class UserValidator {
         validateEmailUnique(userRequest.getEmail(), null);
         validatePhoneNumberUnique(userRequest.getPhoneNumbers(), null);
         validatePasswordCombination(userRequest.getPassword(), userRequest.getConfirmPassword());
-        validateDuplicateItemsInList(userRequest.getAddresses(), "Address");
-        validateDuplicateItemsInList(userRequest.getPhoneNumbers(), "Phone number");
     }
 
     public void validateUpdate(UserRequest userRequest, Long userId) {
         validateEmailUnique(userRequest.getEmail(), userId);
         validatePhoneNumberUnique(userRequest.getPhoneNumbers(), userId);
-        validateDuplicateItemsInList(userRequest.getAddresses(), "Address");
-        validateDuplicateItemsInList(userRequest.getPhoneNumbers(), "Phone number");
     }
 
     private void validateCPFUnique(String cpf) {
@@ -88,15 +84,6 @@ public class UserValidator {
     private void validatePasswordCombination(String password, String confirmPassword) {
         if (!password.equals(confirmPassword)) {
             throw new FieldsNotMatchException("password", "confirm password");
-        }
-    }
-
-    private <T> void validateDuplicateItemsInList(List<T> items, String itemType) {
-        Set<T> itemSet = new HashSet<>();
-        for (T item : items) {
-            if (!itemSet.add(item)) {
-                throw new DuplicateItemsListException(itemType);
-            }
         }
     }
 }

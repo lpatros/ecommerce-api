@@ -67,8 +67,6 @@ public class UserService {
         updatedUser.setId(id);
         updatedUser.setCreatedAt(user.getCreatedAt());
 
-        //TODO: Ajustar para manter telefones e endereços existentes
-
         return userMapper.toResponse(userRepository.save(updatedUser));
     }
 
