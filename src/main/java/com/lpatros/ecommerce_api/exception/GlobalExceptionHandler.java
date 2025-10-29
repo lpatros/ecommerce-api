@@ -9,6 +9,7 @@ import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -177,5 +178,17 @@ public class GlobalExceptionHandler {
         );
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(restErrorMessage);
+    }
+
+    @ExceptionHandler(ObjectOptimisticLockingFailureException.class)
+    public ResponseEntity<RestErrorMessage> handleObjectOptimisticLockingFailureException(ObjectOptimisticLockingFailureException ex) {
+        RestErrorMessage restErrorMessage = new RestErrorMessage(
+                LocalDateTime.now(),
+                HttpStatus.CONFLICT.value(),
+                "Conflict occurred due to concurrent modification",
+                null
+        );
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(restErrorMessage);
     }
 }

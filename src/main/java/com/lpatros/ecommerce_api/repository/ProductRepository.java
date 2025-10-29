@@ -12,4 +12,6 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     boolean existsByName(String name);
 
     boolean existsByNameAndIdNot(String name, Long id);
+
+    boolean existsByIdAndProductImages_Id(Long productId, Long productImagesId);
 }
