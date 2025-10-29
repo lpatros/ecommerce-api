@@ -49,9 +49,9 @@ public class CategoryService {
 
     public CategoryResponse create(CategoryRequest categoryRequest) {
 
-            Category category = categoryMapper.toEntity(categoryRequest);
-
             categoryValidator.validateCreate(categoryRequest);
+
+            Category category = categoryMapper.toEntity(categoryRequest);
 
             return categoryMapper.toResponse(categoryRepository.save(category));
     }

@@ -84,6 +84,17 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(restErrorMessage);
     }
 
+    @ExceptionHandler(DuplicateItemsListException.class)
+    private ResponseEntity<RestErrorMessage> DuplicateItemsListException(DuplicateItemsListException ex) {;
+        RestErrorMessage restErrorMessage = new RestErrorMessage(
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage(),
+                null);
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(restErrorMessage);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<RestErrorMessage> handleValidationExceptions(MethodArgumentNotValidException ex) {
         RestErrorMessage restErrorMessage = new RestErrorMessage(

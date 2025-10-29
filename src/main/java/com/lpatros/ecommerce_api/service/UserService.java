@@ -1,15 +1,11 @@
 package com.lpatros.ecommerce_api.service;
 
 import com.lpatros.ecommerce_api.configuration.Pagination;
-import com.lpatros.ecommerce_api.dto.phoneNumber.PhoneNumberRequest;
 import com.lpatros.ecommerce_api.dto.user.UserFilter;
 import com.lpatros.ecommerce_api.dto.user.UserRequest;
 import com.lpatros.ecommerce_api.dto.user.UserResponse;
 import com.lpatros.ecommerce_api.entity.User;
-import com.lpatros.ecommerce_api.exception.FieldsNotMatchException;
-import com.lpatros.ecommerce_api.exception.NotActiveException;
 import com.lpatros.ecommerce_api.exception.NotFoundException;
-import com.lpatros.ecommerce_api.exception.NotUniqueException;
 import com.lpatros.ecommerce_api.mapper.UserMapper;
 import com.lpatros.ecommerce_api.repository.UserRepository;
 import com.lpatros.ecommerce_api.repository.specification.UserSpecification;
@@ -19,7 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -54,9 +49,9 @@ public class UserService {
 
     public UserResponse create(UserRequest userRequest) {
 
-        User user = userMapper.toEntity(userRequest);
-
         userValidator.validateCreate(userRequest);
+
+        User user = userMapper.toEntity(userRequest);
 
         return userMapper.toResponse(userRepository.save(user));
     }
