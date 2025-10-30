@@ -1,7 +1,6 @@
 package com.lpatros.ecommerce_api.validator;
 
 import com.lpatros.ecommerce_api.dto.category.CategoryRequest;
-import com.lpatros.ecommerce_api.exception.NotFoundException;
 import com.lpatros.ecommerce_api.exception.NotUniqueException;
 import com.lpatros.ecommerce_api.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;

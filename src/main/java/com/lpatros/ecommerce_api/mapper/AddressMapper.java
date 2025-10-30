@@ -4,7 +4,6 @@ import com.lpatros.ecommerce_api.dto.address.AddressRequest;
 import com.lpatros.ecommerce_api.dto.address.AddressResponse;
 import com.lpatros.ecommerce_api.entity.Address;
 import org.springframework.stereotype.Component;
-
 import java.util.List;
 
 @Component

@@ -4,11 +4,8 @@ import com.lpatros.ecommerce_api.configuration.Pagination;
 import com.lpatros.ecommerce_api.dto.product.ProductFilter;
 import com.lpatros.ecommerce_api.dto.product.ProductRequest;
 import com.lpatros.ecommerce_api.dto.product.ProductResponse;
-import com.lpatros.ecommerce_api.dto.productImage.ProductImageRequest;
 import com.lpatros.ecommerce_api.entity.Category;
 import com.lpatros.ecommerce_api.entity.Product;
-import com.lpatros.ecommerce_api.entity.ProductImage;
-import com.lpatros.ecommerce_api.exception.NotActiveException;
 import com.lpatros.ecommerce_api.exception.NotFoundException;
 import com.lpatros.ecommerce_api.mapper.ProductMapper;
 import com.lpatros.ecommerce_api.repository.CategoryRepository;
@@ -20,9 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
