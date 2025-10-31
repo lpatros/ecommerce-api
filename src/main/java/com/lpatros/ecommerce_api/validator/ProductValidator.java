@@ -1,5 +1,6 @@
 package com.lpatros.ecommerce_api.validator;
 
+import com.lpatros.ecommerce_api.dto.product.ProductPatch;
 import com.lpatros.ecommerce_api.dto.product.ProductRequest;
 import com.lpatros.ecommerce_api.exception.NotNegativeException;
 import com.lpatros.ecommerce_api.exception.NotUniqueException;
@@ -26,6 +27,18 @@ public class ProductValidator {
         validateNameUnique(productRequest.getName(), productId);
         validateStockNonNegative(productRequest.getStock());
         validatePriceNonNegative(productRequest.getPrice());
+    }
+
+    public void validatePatch(ProductPatch patch, Long productId) {
+        if (patch.getName() != null) {
+            validateNameUnique(patch.getName(), productId);
+        }
+        if (patch.getStock() != null) {
+            validateStockNonNegative(patch.getStock());
+        }
+        if (patch.getPrice() != null) {
+            validatePriceNonNegative(patch.getPrice());
+        }
     }
 
     private void validateNameUnique(String name, Long idToIgnore) {

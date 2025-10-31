@@ -1,5 +1,6 @@
 package com.lpatros.ecommerce_api.validator;
 
+import com.lpatros.ecommerce_api.dto.user.UserPatch;
 import com.lpatros.ecommerce_api.dto.user.UserRequest;
 import com.lpatros.ecommerce_api.exception.FieldsNotMatchException;
 import com.lpatros.ecommerce_api.exception.NotUniqueException;
@@ -27,6 +28,15 @@ public class UserValidator {
     public void validateUpdate(UserRequest userRequest, Long userId) {
         validateEmailUnique(userRequest.getEmail(), userId);
         validatePhoneNumberUnique(userRequest.getPhoneNumber(), userId);
+    }
+
+    public void validatePatch(UserPatch userPatch, Long userId) {
+        if (userPatch.getEmail() != null) {
+            validateEmailUnique(userPatch.getEmail(), userId);
+        }
+        if (userPatch.getPhoneNumber() != null) {
+            validatePhoneNumberUnique(userPatch.getPhoneNumber(), userId);
+        }
     }
 
     private void validateCPFUnique(String cpf) {

@@ -2,6 +2,7 @@ package com.lpatros.ecommerce_api.controller;
 
 import com.lpatros.ecommerce_api.configuration.Pagination;
 import com.lpatros.ecommerce_api.dto.product.ProductFilter;
+import com.lpatros.ecommerce_api.dto.product.ProductPatch;
 import com.lpatros.ecommerce_api.dto.product.ProductRequest;
 import com.lpatros.ecommerce_api.dto.product.ProductResponse;
 import com.lpatros.ecommerce_api.service.ProductService;
@@ -45,6 +46,12 @@ public class ProductController {
     @PutMapping("/{id}")
     public ResponseEntity<ProductResponse> update(@PathVariable Long id, @RequestBody @Valid ProductRequest productRequest) {
         return ResponseEntity.ok(productService.update(id, productRequest));
+    }
+
+    @Operation(summary = "Partially update a Product by Id", method = "PATCH")
+    @PatchMapping("/{id}")
+    public ResponseEntity<ProductResponse> partialUpdate(@PathVariable Long id, @RequestBody ProductPatch productPatch) {
+        return ResponseEntity.ok(productService.partialUpdate(id, productPatch));
     }
 
     @Operation(summary = "Delete a Product by Id", method = "DELETE")

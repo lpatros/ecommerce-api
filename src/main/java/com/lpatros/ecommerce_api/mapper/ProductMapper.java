@@ -1,6 +1,7 @@
 package com.lpatros.ecommerce_api.mapper;
 
 import com.lpatros.ecommerce_api.configuration.Pagination;
+import com.lpatros.ecommerce_api.dto.product.ProductPatch;
 import com.lpatros.ecommerce_api.dto.product.ProductRequest;
 import com.lpatros.ecommerce_api.dto.product.ProductResponse;
 import com.lpatros.ecommerce_api.entity.Category;
@@ -8,7 +9,6 @@ import com.lpatros.ecommerce_api.entity.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
-import java.util.List;
 
 @Component
 public class ProductMapper {
@@ -51,5 +51,23 @@ public class ProductMapper {
             Boolean.FALSE,
             category
         );
+    }
+
+    public void updateEntityFromPatch(Product product, ProductPatch patch) {
+        if (patch.getName() != null) {
+            product.setName(patch.getName());
+        }
+        if (patch.getDescription() != null) {
+            product.setDescription(patch.getDescription());
+        }
+        if (patch.getStock() != null) {
+            product.setStock(patch.getStock());
+        }
+        if (patch.getPrice() != null) {
+            product.setPrice(patch.getPrice());
+        }
+        if (patch.getImageUrl() != null) {
+            product.setImageUrl(patch.getImageUrl());
+        }
     }
 }

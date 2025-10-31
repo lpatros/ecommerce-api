@@ -2,6 +2,7 @@ package com.lpatros.ecommerce_api.service;
 
 import com.lpatros.ecommerce_api.configuration.Pagination;
 import com.lpatros.ecommerce_api.dto.user.UserFilter;
+import com.lpatros.ecommerce_api.dto.user.UserPatch;
 import com.lpatros.ecommerce_api.dto.user.UserRequest;
 import com.lpatros.ecommerce_api.dto.user.UserResponse;
 import com.lpatros.ecommerce_api.entity.User;
@@ -68,6 +69,18 @@ public class UserService {
         updatedUser.setCreatedAt(user.getCreatedAt());
 
         return userMapper.toResponse(userRepository.save(updatedUser));
+    }
+
+    public UserResponse partialUpdate(Long id, UserPatch userPatch) {
+
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User", "id"));
+
+        userValidator.validatePatch(userPatch, id);
+
+        userMapper.updateEntityFromPatch(user, userPatch);
+
+        return userMapper.toResponse(userRepository.save(user));
     }
 
     public void delete(Long id) {

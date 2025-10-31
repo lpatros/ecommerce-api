@@ -2,6 +2,7 @@ package com.lpatros.ecommerce_api.controller;
 
 import com.lpatros.ecommerce_api.configuration.Pagination;
 import com.lpatros.ecommerce_api.dto.user.UserFilter;
+import com.lpatros.ecommerce_api.dto.user.UserPatch;
 import com.lpatros.ecommerce_api.dto.user.UserRequest;
 import com.lpatros.ecommerce_api.dto.user.UserResponse;
 import com.lpatros.ecommerce_api.service.UserService;
@@ -44,6 +45,12 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<UserResponse> update(@PathVariable Long id, @RequestBody UserRequest userRequest) {
         return ResponseEntity.ok(userService.update(id, userRequest));
+    }
+
+    @Operation(summary = "Partially update a User by Id", method = "PATCH")
+    @PatchMapping("/{id}")
+    public ResponseEntity<UserResponse> partialUpdate(@PathVariable Long id, @RequestBody UserPatch userPatch) {
+        return ResponseEntity.ok(userService.partialUpdate(id, userPatch));
     }
 
     @Operation(summary = "Delete a User by Id", method = "DELETE")

@@ -2,6 +2,7 @@ package com.lpatros.ecommerce_api.service;
 
 import com.lpatros.ecommerce_api.configuration.Pagination;
 import com.lpatros.ecommerce_api.dto.product.ProductFilter;
+import com.lpatros.ecommerce_api.dto.product.ProductPatch;
 import com.lpatros.ecommerce_api.dto.product.ProductRequest;
 import com.lpatros.ecommerce_api.dto.product.ProductResponse;
 import com.lpatros.ecommerce_api.entity.Category;
@@ -79,6 +80,24 @@ public class ProductService {
         updatedProduct.setCreatedAt(product.getCreatedAt());
 
         return productMapper.toResponse(productRepository.save(updatedProduct));
+    }
+
+    public ProductResponse partialUpdate(Long id, ProductPatch productPatch) {
+
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Product", "id"));
+
+        if (productPatch.getCategoryId() != null) {
+            Category category = categoryRepository.findById(productPatch.getCategoryId())
+                    .orElseThrow(() -> new NotFoundException("Category", "id"));
+            product.setCategory(category);
+        }
+
+        productValidator.validatePatch(productPatch, id);
+
+        productMapper.updateEntityFromPatch(product, productPatch);
+
+        return productMapper.toResponse(productRepository.save(product));
     }
 
     public void delete(Long id) {

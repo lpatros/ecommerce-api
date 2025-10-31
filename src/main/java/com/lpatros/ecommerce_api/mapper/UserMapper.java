@@ -1,6 +1,7 @@
 package com.lpatros.ecommerce_api.mapper;
 
 import com.lpatros.ecommerce_api.configuration.Pagination;
+import com.lpatros.ecommerce_api.dto.user.UserPatch;
 import com.lpatros.ecommerce_api.dto.user.UserRequest;
 import com.lpatros.ecommerce_api.dto.user.UserResponse;
 import com.lpatros.ecommerce_api.entity.User;
@@ -40,5 +41,23 @@ public class UserMapper {
                 null,
                 Boolean.FALSE
         );
+    }
+
+    public void updateEntityFromPatch(User user, UserPatch patch) {
+        if (patch.getName() != null) {
+            user.setName(patch.getName());
+        }
+        if (patch.getPhoneNumber() != null) {
+            user.setPhoneNumber(patch.getPhoneNumber());
+        }
+        if (patch.getEmail() != null) {
+            user.setEmail(patch.getEmail());
+        }
+        if (patch.getBirthDate() != null) {
+            user.setBirthDate(patch.getBirthDate());
+        }
+        if (patch.getAddress() != null) {
+            user.setAddress(patch.getAddress());
+        }
     }
 }
