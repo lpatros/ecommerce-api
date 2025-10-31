@@ -13,7 +13,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
 
     boolean existsByEmailAndIdNot(String email, Long idToIgnore);
 
-    boolean existsByPhoneNumber_CountryCodeAndPhoneNumber_AreaCodeAndPhoneNumber_Number(String countryCode, String areaCode, String number);
+    boolean existsByPhoneNumber(String phoneNumber);
 
-    boolean existsByPhoneNumber_CountryCodeAndPhoneNumber_AreaCodeAndPhoneNumber_NumberAndIdNot(String countryCode, String areaCode, String number, Long id);
+    boolean existsByPhoneNumberAndIdNot(String phoneNumber, Long idToIgnore);
 }

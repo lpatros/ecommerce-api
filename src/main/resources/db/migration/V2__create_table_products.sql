@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS products (
     description TEXT,
     stock INT NOT NULL,
     price DECIMAL(10, 2) NOT NULL,
+    image_url VARCHAR(512) NOT NULL,
     category_id BIGINT REFERENCES categories(id),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,

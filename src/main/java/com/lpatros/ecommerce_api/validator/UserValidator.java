@@ -1,13 +1,11 @@
 package com.lpatros.ecommerce_api.validator;
 
-import com.lpatros.ecommerce_api.dto.phoneNumber.PhoneNumberRequest;
 import com.lpatros.ecommerce_api.dto.user.UserRequest;
 import com.lpatros.ecommerce_api.exception.FieldsNotMatchException;
 import com.lpatros.ecommerce_api.exception.NotUniqueException;
 import com.lpatros.ecommerce_api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import java.util.List;
 
 @Component
 public class UserValidator {
@@ -22,13 +20,13 @@ public class UserValidator {
     public void validateCreate(UserRequest userRequest) {
         validateCPFUnique(userRequest.getCpf());
         validateEmailUnique(userRequest.getEmail(), null);
-        validatePhoneNumberUnique(userRequest.getPhoneNumbers(), null);
+        validatePhoneNumberUnique(userRequest.getPhoneNumber(), null);
         validatePasswordCombination(userRequest.getPassword(), userRequest.getConfirmPassword());
     }
 
     public void validateUpdate(UserRequest userRequest, Long userId) {
         validateEmailUnique(userRequest.getEmail(), userId);
-        validatePhoneNumberUnique(userRequest.getPhoneNumbers(), userId);
+        validatePhoneNumberUnique(userRequest.getPhoneNumber(), userId);
     }
 
     private void validateCPFUnique(String cpf) {
@@ -50,29 +48,15 @@ public class UserValidator {
         }
     }
 
-    private void validatePhoneNumberUnique(List<PhoneNumberRequest> phoneNumberRequests, Long userIdToIgnore) {
-        for (PhoneNumberRequest phoneNumberRequest : phoneNumberRequests) {
-            boolean exists;
-            if (userIdToIgnore == null) {
-                exists = userRepository.existsByPhoneNumber_CountryCodeAndPhoneNumber_AreaCodeAndPhoneNumber_Number(
-                        phoneNumberRequest.getCountryCode(),
-                        phoneNumberRequest.getAreaCode(),
-                        phoneNumberRequest.getNumber()
-                );
-                if (exists) {
-                    throw new NotUniqueException("User", "phone number");
-                }
-            } else {
-                exists = userRepository.existsByPhoneNumber_CountryCodeAndPhoneNumber_AreaCodeAndPhoneNumber_NumberAndIdNot(
-                        phoneNumberRequest.getCountryCode(),
-                        phoneNumberRequest.getAreaCode(),
-                        phoneNumberRequest.getNumber(),
-                        userIdToIgnore
-                );
-            }
-            if (exists) {
-                throw new NotUniqueException("User", "phone number");
-            }
+    private void validatePhoneNumberUnique(String phoneNumber, Long userIdToIgnore) {
+        boolean exists;
+        if (userIdToIgnore == null) {
+            exists = userRepository.existsByPhoneNumber(phoneNumber);
+        } else {
+            exists = userRepository.existsByPhoneNumberAndIdNot(phoneNumber, userIdToIgnore);
+        }
+        if (exists) {
+            throw new NotUniqueException("User", "Phone Number");
         }
     }
 

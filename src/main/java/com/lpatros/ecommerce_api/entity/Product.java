@@ -1,13 +1,11 @@
 package com.lpatros.ecommerce_api.entity;
 
 import jakarta.persistence.*;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Table;
 import lombok.*;
 import org.hibernate.annotations.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "products")
@@ -34,8 +32,8 @@ public class Product {
     @Column(nullable = false)
     private BigDecimal price;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductImage> productImages;
+    @Column(nullable = false)
+    private String imageUrl;
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")

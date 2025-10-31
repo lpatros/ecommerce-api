@@ -126,60 +126,17 @@ public class MockData implements CommandLineRunner {
 
     private void loadProducts(List<Category> categoryList) {
 
-        ProductImage productImage1 = new ProductImage(
-                null,
-                null,
-                "https://example.com/images/smartphone_xyz_front.jpg",
-                Boolean.TRUE,
-                Boolean.FALSE
-        );
-
-        ProductImage productImage2 = new ProductImage(
-                null,
-                null,
-                "https://example.com/images/smartphone_xyz_back.jpg",
-                Boolean.FALSE,
-                Boolean.FALSE
-        );
-
         Product product1 = new Product(
                 null,
                 "Smartphone XYZ",
                 "Smartphone com tela de 6.5 polegadas, 128GB de armazenamento e câmera tripla.",
                 50,
                 BigDecimal.valueOf(1999.99),
-                List.of(productImage1, productImage2),
+                "https://example.com/images/smartphone_xyz_front.jpg",
                 LocalDateTime.now(),
                 LocalDateTime.now(),
                 Boolean.FALSE,
                 categoryRepository.findById(categoryList.getFirst().getId()).orElse(null)
-        );
-
-        productImage1.setProduct(product1);
-        productImage2.setProduct(product1);
-
-        ProductImage productImage3 = new ProductImage(
-                null,
-                null,
-                "https://example.com/images/tv_abc_front.jpg",
-                Boolean.TRUE,
-                Boolean.FALSE
-        );
-
-        ProductImage productImage4 = new ProductImage(
-                null,
-                null,
-                "https://example.com/images/tv_abc_side.jpg",
-                Boolean.FALSE,
-                Boolean.FALSE
-        );
-
-        ProductImage productImage5 = new ProductImage(
-                null,
-                null,
-                "https://example.com/images/tv_abc_back.jpg",
-                Boolean.FALSE,
-                Boolean.FALSE
         );
 
         Product product2 = new Product(
@@ -188,97 +145,43 @@ public class MockData implements CommandLineRunner {
                 "Smart TV 55 polegadas com resolução 4K, HDR com AndroidTV.",
                 30,
                 BigDecimal.valueOf(3499.99),
-                List.of(productImage3, productImage4, productImage5),
+                "https://example.com/images/tv_abc_front.jpg",
                 LocalDateTime.now(),
                 LocalDateTime.now(),
                 Boolean.FALSE,
                 categoryRepository.findById(categoryList.getFirst().getId()).orElse(null)
         );
 
-        productImage3.setProduct(product2);
-        productImage4.setProduct(product2);
-        productImage5.setProduct(product2);
-
         productRepository.saveAll(Arrays.asList(product1, product2));
     }
 
     private void loadUsers() {
 
-        PhoneNumber phoneNumber1 = new PhoneNumber(
-                null,
-                "+55",
-                "11",
-                "91234-5678",
-                null,
-                Boolean.FALSE
-        );
-
-        Address address1 = new Address(
-                null,
-                "Rua ABC",
-                "100",
-                "Apto 100",
-                "12345-678",
-                "Bairro XYZ",
-                "São Paulo",
-                "SP",
-                null,
-                Boolean.FALSE
-        );
-
         User user1 = new User(
                 null,
                 "123456789-01",
                 "Leonardo",
-                List.of(phoneNumber1),
+                "+55 (11) 91234-5678",
                 "leonardo@mail.com",
                 "12345678",
                 LocalDate.now(),
-                List.of(address1),
+                "Rua ABC, 100, Apto 100, Bairro XYZ, São Paulo - SP, 12345-678",
                 LocalDateTime.now(),
                 Boolean.FALSE
                 );
-
-        phoneNumber1.setUser(user1);
-        address1.setUser(user1);
-
-        PhoneNumber phoneNumber2 = new PhoneNumber(
-                null,
-                "+55",
-                "11",
-                "92345-6789",
-                null,
-                Boolean.FALSE
-        );
-
-        Address address2 = new Address(
-                null,
-                "Rua DEF",
-                "200",
-                "Apto 200",
-                "23456-789",
-                "Bairro UVW",
-                "São Paulo",
-                "SP",
-                null,
-                Boolean.FALSE
-        );
 
         User user2 = new User(
                 null,
                 "234567890-12",
                 "Fernando",
-                List.of(phoneNumber2),
+                "+55 (11) 92345-6789",
                 "fernando@mail.com",
                 "12345678",
                 LocalDate.now(),
-                List.of(address2),
+                "Rua DEF, 200, Apto 200, Bairro UVW, São Paulo - SP, 23456-789",
                 LocalDateTime.now(),
                 Boolean.FALSE
         );
-
-        phoneNumber2.setUser(user2);
-        address2.setUser(user2);
 
         userRepository.saveAll(Arrays.asList(user1, user2));
     }

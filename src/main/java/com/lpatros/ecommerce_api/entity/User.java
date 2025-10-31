@@ -10,7 +10,6 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -32,8 +31,8 @@ public class User {
     @Column(nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PhoneNumber> phoneNumber;
+    @Column(nullable = false)
+    private String phoneNumber;
 
     @Column(nullable = false, unique = true)
     private String email;
@@ -44,8 +43,8 @@ public class User {
     @Column(nullable = false)
     private LocalDate birthDate;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Address> addresses;
+    @Column(nullable = false)
+    private String address;
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")

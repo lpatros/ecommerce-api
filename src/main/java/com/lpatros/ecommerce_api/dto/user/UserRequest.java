@@ -1,7 +1,5 @@
 package com.lpatros.ecommerce_api.dto.user;
 
-import com.lpatros.ecommerce_api.dto.address.AddressRequest;
-import com.lpatros.ecommerce_api.dto.phoneNumber.PhoneNumberRequest;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -9,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.time.LocalDate;
-import java.util.List;
 
 @Getter
 @Setter
@@ -24,7 +21,7 @@ public class UserRequest {
     private String name;
 
     @NotBlank(message = "The phone number of the user is required")
-    private List<PhoneNumberRequest> phoneNumbers;
+    private String phoneNumber;
 
     @NotBlank(message = "The email of the user is required")
     private String email;
@@ -37,5 +34,5 @@ public class UserRequest {
     @NotNull(message = "The birth date of the user is required")
     private LocalDate birthDate;
 
-    private List<AddressRequest> addresses;
+    private String address;
 }

@@ -1,11 +1,9 @@
 package com.lpatros.ecommerce_api.mapper;
 
 import com.lpatros.ecommerce_api.configuration.Pagination;
-import com.lpatros.ecommerce_api.dto.productImage.ProductImageResponse;
 import com.lpatros.ecommerce_api.dto.product.ProductRequest;
 import com.lpatros.ecommerce_api.dto.product.ProductResponse;
 import com.lpatros.ecommerce_api.entity.Category;
-import com.lpatros.ecommerce_api.entity.ProductImage;
 import com.lpatros.ecommerce_api.entity.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,28 +14,20 @@ import java.util.List;
 public class ProductMapper {
 
     private final CategoryMapper categoryMapper;
-    private final ProductImagesMapper productImagesMapper;
 
     @Autowired
-    public ProductMapper(CategoryMapper categoryMapper, ProductImagesMapper productImagesMapper) {
-        this.productImagesMapper = productImagesMapper;
+    public ProductMapper(CategoryMapper categoryMapper) {
         this.categoryMapper = categoryMapper;
     }
 
     public ProductResponse toResponse(Product product) {
-
-        List<ProductImageResponse> productImageResponsesList = 
-            (product.getProductImages() != null && !product.getProductImages().isEmpty()) 
-                ? productImagesMapper.toResponseList(product.getProductImages())
-                : List.of();
-
         return new ProductResponse(
             product.getId(),
             product.getName(),
             product.getDescription(),
             product.getStock(),
             product.getPrice(),
-            productImageResponsesList,
+            product.getImageUrl(),
             product.getCreatedAt(),
             product.getUpdatedAt(),
             categoryMapper.toResponse(product.getCategory())
@@ -49,25 +39,17 @@ public class ProductMapper {
     }
 
     public Product toEntity(ProductRequest request, Category category) {
-        
-        Product product = new Product(
+        return new Product(
             null,
             request.getName(),
             request.getDescription(),
             request.getStock(),
             request.getPrice(),
-            null,
+            request.getImageUrl(),
             null,
             null,
             Boolean.FALSE,
             category
         );
-        
-        List<ProductImage> productImages = productImagesMapper.toEntityList(request.getProductImages());
-        
-        productImages.forEach(image -> image.setProduct(product));
-        product.setProductImages(productImages);
-        
-        return product;
     }
 }

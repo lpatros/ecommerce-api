@@ -1,6 +1,5 @@
 package com.lpatros.ecommerce_api.dto.product;
 
-import com.lpatros.ecommerce_api.dto.productImage.ProductImageRequest;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -8,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.math.BigDecimal;
-import java.util.List;
 
 @Getter
 @Setter
@@ -27,8 +25,8 @@ public class ProductRequest {
     @NotNull(message = "The price of the product is required")
     private BigDecimal price;
 
-    @NotNull(message = "The product must have at least one image")
-    private List<ProductImageRequest> productImages;
+    @NotNull(message = "The image URL of the product is required")
+    private String imageUrl;
 
     @NotNull(message = "The category ID of the product is required")
     private Long categoryId;

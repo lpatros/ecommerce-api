@@ -1,15 +1,12 @@
 package com.lpatros.ecommerce_api.validator;
 
 import com.lpatros.ecommerce_api.dto.product.ProductRequest;
-import com.lpatros.ecommerce_api.dto.productImage.ProductImageRequest;
-import com.lpatros.ecommerce_api.exception.NotFoundException;
 import com.lpatros.ecommerce_api.exception.NotNegativeException;
 import com.lpatros.ecommerce_api.exception.NotUniqueException;
 import com.lpatros.ecommerce_api.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
-import java.util.List;
 
 @Component
 public class ProductValidator {
@@ -29,7 +26,6 @@ public class ProductValidator {
         validateNameUnique(productRequest.getName(), productId);
         validateStockNonNegative(productRequest.getStock());
         validatePriceNonNegative(productRequest.getPrice());
-        validateProductImagePertainsToProduct(productRequest.getProductImages(), productId);
     }
 
     private void validateNameUnique(String name, Long idToIgnore) {
@@ -53,17 +49,6 @@ public class ProductValidator {
     private void validatePriceNonNegative(BigDecimal price) {
         if (price.compareTo(BigDecimal.ZERO) < 0) {
             throw new NotNegativeException("Product", "price");
-        }
-    }
-
-    private void validateProductImagePertainsToProduct(List<ProductImageRequest> productImageRequestList, Long productId) {
-        for (ProductImageRequest productImageRequest : productImageRequestList) {
-            if (productImageRequest.getId() != null) {
-                boolean exists = productRepository.existsByIdAndProductImages_Id(productId, productImageRequest.getId());
-                if (!exists) {
-                    throw new NotFoundException("ProductImage", "id");
-                }
-            }
         }
     }
 }
