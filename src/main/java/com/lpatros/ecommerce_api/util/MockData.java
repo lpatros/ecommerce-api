@@ -1,7 +1,11 @@
 package com.lpatros.ecommerce_api.util;
 
 import com.lpatros.ecommerce_api.entity.*;
+import com.lpatros.ecommerce_api.entity.order.Order;
+import com.lpatros.ecommerce_api.entity.order.OrderItem;
+import com.lpatros.ecommerce_api.entity.order.OrderStatus;
 import com.lpatros.ecommerce_api.repository.CategoryRepository;
+import com.lpatros.ecommerce_api.repository.OrderRepository;
 import com.lpatros.ecommerce_api.repository.ProductRepository;
 import com.lpatros.ecommerce_api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +16,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -21,33 +26,42 @@ public class MockData implements CommandLineRunner {
     private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
+    private final OrderRepository orderRepository;
 
     @Autowired
-    public MockData(CategoryRepository categoryRepository, ProductRepository productRepository, UserRepository userRepository) {
+    public MockData(CategoryRepository categoryRepository, ProductRepository productRepository, UserRepository userRepository, OrderRepository orderRepository) {
         this.categoryRepository = categoryRepository;
         this.productRepository = productRepository;
         this.userRepository = userRepository;
+        this.orderRepository = orderRepository;
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         try {
 
+            orderRepository.deleteAll();
             productRepository.deleteAll();
             categoryRepository.deleteAll();
             userRepository.deleteAll();
 
             List<Category> categoryList = loadCategories();
-            System.out.println(">>> Dados mock de Categoria carregados com sucesso!");
+            System.out.println(">>> Category mock data loaded successfully!");
 
-            loadProducts(categoryList);
-            System.out.println(">>> Dados mock de Produto carregados com sucesso!");
+            List<Product> productList = loadProducts(categoryList);
+            System.out.println(">>> Product mock data loaded successfully!");
 
-            loadUsers();
-            System.out.println(">>> Dados mock de Usuário carregados com sucesso!");
+            List<User> userList = loadUsers();
+            System.out.println(">>> User mock data loaded successfully!");
+
+            List<Order> orderList = loadOrders(userList);
+            System.out.println(">>> Order mock data loaded successfully!");
+
+            loadOrderItems(orderList, productList);
+            System.out.println(">>> Order Items mock data loaded successfully!");
 
         } catch (Exception e) {
-            System.out.println(">>> Erro ao carregar dados mock: " + e.getMessage());
+            System.out.println(">>> Error loading mock data: " + e.getMessage());
         }
     }
 
@@ -124,7 +138,7 @@ public class MockData implements CommandLineRunner {
         return categoriesList;
     }
 
-    private void loadProducts(List<Category> categoryList) {
+    private List<Product> loadProducts(List<Category> categoryList) {
 
         Product product1 = new Product(
                 null,
@@ -152,10 +166,88 @@ public class MockData implements CommandLineRunner {
                 categoryRepository.findById(categoryList.getFirst().getId()).orElse(null)
         );
 
-        productRepository.saveAll(Arrays.asList(product1, product2));
+        List<Product> productList = Arrays.asList(product1, product2);
+        productRepository.saveAll(productList);
+
+        return productList;
     }
 
-    private void loadUsers() {
+    private void loadOrderItems(List<Order> orderList, List<Product> productList) {
+
+        OrderItem orderItem1 = new OrderItem(
+                null,
+                1,
+                BigDecimal.valueOf(1999.99),
+                productList.get(0),
+                orderList.get(0),
+                Boolean.FALSE
+        );
+
+        OrderItem orderItem2 = new OrderItem(
+                null,
+                2,
+                BigDecimal.valueOf(3499.99),
+                productList.get(1),
+                orderList.get(0),
+                Boolean.FALSE
+        );
+
+        OrderItem orderItem3 = new OrderItem(
+                null,
+                3,
+                BigDecimal.valueOf(1999.99),
+                productList.get(0),
+                orderList.get(1),
+                Boolean.FALSE
+        );
+
+        BigDecimal totalOrder1 = orderItem1.getUnitPrice()
+                .multiply(BigDecimal.valueOf(orderItem1.getQuantity()))
+                .add(orderItem2.getUnitPrice().multiply(BigDecimal.valueOf(orderItem2.getQuantity())));
+
+        BigDecimal totalOrder2 = orderItem3.getUnitPrice()
+                .multiply(BigDecimal.valueOf(orderItem3.getQuantity()));
+
+        orderList.get(0).setTotalPrice(totalOrder1);
+        orderList.get(0).setOrderItems(Arrays.asList(orderItem1, orderItem2));
+
+        orderList.get(1).setTotalPrice(totalOrder2);
+        orderList.get(1).setOrderItems(Collections.singletonList(orderItem3));
+
+        orderRepository.saveAll(orderList);
+    }
+
+    private List<Order> loadOrders(List<User> userList) {
+
+        Order order1 = new Order(
+                null,
+                null,
+                BigDecimal.ZERO,
+                OrderStatus.PENDING,
+                "TRACK123456",
+                userList.get(0),
+                LocalDateTime.now(),
+                Boolean.FALSE
+        );
+
+        Order order2 = new Order(
+                null,
+                null,
+                BigDecimal.ZERO,
+                OrderStatus.PROCESSING,
+                "TRACK789012",
+                userList.get(1),
+                LocalDateTime.now(),
+                Boolean.FALSE
+        );
+
+        List<Order> orderList = Arrays.asList(order1, order2);
+        orderRepository.saveAll(orderList);
+
+        return orderList;
+    }
+
+    private List<User> loadUsers() {
 
         User user1 = new User(
                 null,
@@ -166,9 +258,10 @@ public class MockData implements CommandLineRunner {
                 "12345678",
                 LocalDate.now(),
                 "Rua ABC, 100, Apto 100, Bairro XYZ, São Paulo - SP, 12345-678",
+                null,
                 LocalDateTime.now(),
                 Boolean.FALSE
-                );
+        );
 
         User user2 = new User(
                 null,
@@ -179,10 +272,14 @@ public class MockData implements CommandLineRunner {
                 "12345678",
                 LocalDate.now(),
                 "Rua DEF, 200, Apto 200, Bairro UVW, São Paulo - SP, 23456-789",
+                null,
                 LocalDateTime.now(),
                 Boolean.FALSE
         );
 
-        userRepository.saveAll(Arrays.asList(user1, user2));
+        List<User> userList = Arrays.asList(user1, user2);
+        userRepository.saveAll(userList);
+
+        return userList;
     }
 }

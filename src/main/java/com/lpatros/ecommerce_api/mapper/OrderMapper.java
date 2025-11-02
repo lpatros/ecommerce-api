@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Component
 public class OrderMapper {
@@ -31,6 +32,10 @@ public class OrderMapper {
             order.getUser().getId(),
             order.getCreatedAt()
         );
+    }
+
+    public List<OrderResponse> toResponseList(List<Order> orders) {
+        return orders.stream().map(this::toResponse).toList();
     }
 
     public Pagination<OrderResponse> toResponsePagination(Page<Order> orders) {

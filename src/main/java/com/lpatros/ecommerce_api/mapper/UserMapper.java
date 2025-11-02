@@ -5,11 +5,19 @@ import com.lpatros.ecommerce_api.dto.user.UserPatch;
 import com.lpatros.ecommerce_api.dto.user.UserRequest;
 import com.lpatros.ecommerce_api.dto.user.UserResponse;
 import com.lpatros.ecommerce_api.entity.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UserMapper {
+
+    private final OrderMapper orderMapper;
+
+    @Autowired
+    public UserMapper(OrderMapper orderMapper) {
+        this.orderMapper = orderMapper;
+    }
 
     public UserResponse toResponse(User user) {
         return new UserResponse(
@@ -20,6 +28,7 @@ public class UserMapper {
                 user.getEmail(),
                 user.getBirthDate(),
                 user.getAddress(),
+                orderMapper.toResponseList(user.getOrders()),
                 user.getCreatedAt()
         );
     }
@@ -38,6 +47,7 @@ public class UserMapper {
                 userRequest.getPassword(),
                 userRequest.getBirthDate(),
                 userRequest.getAddress(),
+                null,
                 null,
                 Boolean.FALSE
         );
