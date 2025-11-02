@@ -2,7 +2,7 @@ package com.lpatros.ecommerce_api.validator;
 
 import com.lpatros.ecommerce_api.dto.user.UserPatch;
 import com.lpatros.ecommerce_api.dto.user.UserRequest;
-import com.lpatros.ecommerce_api.exception.FieldsNotMatchException;
+import com.lpatros.ecommerce_api.exception.NotMatchException;
 import com.lpatros.ecommerce_api.exception.NotUniqueException;
 import com.lpatros.ecommerce_api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +72,7 @@ public class UserValidator {
 
     private void validatePasswordCombination(String password, String confirmPassword) {
         if (!password.equals(confirmPassword)) {
-            throw new FieldsNotMatchException("password", "confirm password");
+            throw new NotMatchException("password", "confirm password");
         }
     }
 }

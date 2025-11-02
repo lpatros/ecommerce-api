@@ -62,8 +62,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(restErrorMessage);
     }
 
-    @ExceptionHandler(FieldsNotMatchException.class)
-    private ResponseEntity<RestErrorMessage> FieldsNotMatchException(FieldsNotMatchException ex) {;
+    @ExceptionHandler(NotMatchException.class)
+    private ResponseEntity<RestErrorMessage> FieldsNotMatchException(NotMatchException ex) {;
         RestErrorMessage restErrorMessage = new RestErrorMessage(
                 LocalDateTime.now(),
                 HttpStatus.BAD_REQUEST.value(),

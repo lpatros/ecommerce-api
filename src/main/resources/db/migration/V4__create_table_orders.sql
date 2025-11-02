@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS orders (
+    id BIGSERIAL PRIMARY KEY,
+    total_price DECIMAL(10, 2) NOT NULL,
+    status VARCHAR(20) NOT NULL,
+    tracking_code VARCHAR(100),
+    user_id BIGINT REFERENCES users(id),
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    deleted BOOLEAN NOT NULL DEFAULT FALSE
+)
