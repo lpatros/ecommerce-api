@@ -15,8 +15,7 @@ public class OrderSpecification {
             List<Predicate> predicates = new ArrayList<>();
 
             if (filter.getTrackingCode() != null && !filter.getTrackingCode().isEmpty()) {
-                String trackingCodePattern = "%" + filter.getTrackingCode().toLowerCase() + "%";
-                predicates.add(cb.equal(root.get("trackingCode"), trackingCodePattern));
+                predicates.add(cb.equal(root.get("trackingCode"), filter.getTrackingCode()));
             }
 
             if (filter.getStatus() != null) {
