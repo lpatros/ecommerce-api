@@ -34,7 +34,7 @@ public class OrderValidator {
 
         for (OrderItemRequest item : orderItems) {
             if (!productIds.add(item.getProductId())) {
-                throw new DuplicateItemsListException("Duplicate product in order items");
+                throw new DuplicateItemsListException("Product");
             }
         }
     }

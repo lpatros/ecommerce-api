@@ -2,6 +2,7 @@ package com.lpatros.ecommerce_api.service;
 
 import com.lpatros.ecommerce_api.configuration.Pagination;
 import com.lpatros.ecommerce_api.dto.order.OrderFilter;
+import com.lpatros.ecommerce_api.dto.order.OrderPatch;
 import com.lpatros.ecommerce_api.dto.order.OrderRequest;
 import com.lpatros.ecommerce_api.dto.order.OrderResponse;
 import com.lpatros.ecommerce_api.entity.User;
@@ -59,6 +60,15 @@ public class OrderService {
         orderValidator.validateCreate(orderRequest);
 
         Order order = orderMapper.toEntity(orderRequest, user);
+
+        return orderMapper.toResponse(orderRepository.save(order));
+    }
+
+    public OrderResponse partialUpdate(Long id, OrderPatch orderPatch) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Order", "id"));
+
+        orderMapper.updateEntityFromPatch(order, orderPatch);
 
         return orderMapper.toResponse(orderRepository.save(order));
     }

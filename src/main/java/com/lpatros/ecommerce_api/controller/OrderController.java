@@ -2,6 +2,7 @@ package com.lpatros.ecommerce_api.controller;
 
 import com.lpatros.ecommerce_api.configuration.Pagination;
 import com.lpatros.ecommerce_api.dto.order.OrderFilter;
+import com.lpatros.ecommerce_api.dto.order.OrderPatch;
 import com.lpatros.ecommerce_api.dto.order.OrderRequest;
 import com.lpatros.ecommerce_api.dto.order.OrderResponse;
 import com.lpatros.ecommerce_api.service.OrderService;
@@ -40,5 +41,11 @@ public class OrderController {
     @PostMapping
     public ResponseEntity<OrderResponse> create(@Valid @RequestBody OrderRequest orderRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(orderService.create(orderRequest));
+    }
+
+    @Operation(summary = "Partially update a Order by Id", method = "PATCH")
+    @PatchMapping("/{id}")
+    public ResponseEntity<OrderResponse> partialUpdate(@PathVariable Long id, @Valid @RequestBody OrderPatch orderPatch) {
+        return ResponseEntity.ok(orderService.partialUpdate(id, orderPatch));
     }
 }

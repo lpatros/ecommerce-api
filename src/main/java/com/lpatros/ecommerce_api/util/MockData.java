@@ -150,7 +150,7 @@ public class MockData implements CommandLineRunner {
                 LocalDateTime.now(),
                 LocalDateTime.now(),
                 Boolean.FALSE,
-                categoryRepository.findById(categoryList.getFirst().getId()).orElse(null)
+                categoryList.getFirst()
         );
 
         Product product2 = new Product(
@@ -163,7 +163,7 @@ public class MockData implements CommandLineRunner {
                 LocalDateTime.now(),
                 LocalDateTime.now(),
                 Boolean.FALSE,
-                categoryRepository.findById(categoryList.getFirst().getId()).orElse(null)
+                categoryList.getFirst()
         );
 
         List<Product> productList = Arrays.asList(product1, product2);

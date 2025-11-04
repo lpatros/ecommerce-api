@@ -1,6 +1,7 @@
 package com.lpatros.ecommerce_api.mapper;
 
 import com.lpatros.ecommerce_api.configuration.Pagination;
+import com.lpatros.ecommerce_api.dto.order.OrderPatch;
 import com.lpatros.ecommerce_api.dto.order.OrderRequest;
 import com.lpatros.ecommerce_api.dto.order.OrderResponse;
 import com.lpatros.ecommerce_api.entity.User;
@@ -58,5 +59,16 @@ public class OrderMapper {
         order.setOrderItems(orderItemMapper.toEntityList(orderRequest.getOrderItems(), order));
 
         return order;
+    }
+
+    public void updateEntityFromPatch(Order order, OrderPatch orderPatch) {
+
+        if (orderPatch.getOrderStatus() != null) {
+            order.setStatus(orderPatch.getOrderStatus());
+        }
+
+        if (orderPatch.getTrackingCode() != null) {
+            order.setTrackingCode(orderPatch.getTrackingCode());
+        }
     }
 }
