@@ -63,23 +63,23 @@ A API utiliza **PostgreSQL** como banco de dados, **Flyway** para versionamento 
 ```
 ecommerce-api/
 ├── src/
-│   ├── main/
-│   │   ├── java/com/lpatros/ecommerce_api/
-│   │   │   ├── configuration/      # Configurações da aplicação
-│   │   │   ├── controller/         # Controllers REST
-│   │   │   ├── dto/                # Data Transfer Objects
-│   │   │   ├── entity/             # Entidades JPA
-│   │   │   ├── exception/          # Tratamento de exceções
-│   │   │   ├── mapper/             # Mapeadores DTO <-> Entity
-│   │   │   ├── repository/         # Repositórios JPA
-│   │   │   ├── service/            # Regras de negócio
-│   │   │   ├── util/               # Utilitários
-│   │   │   └── validator/          # Validadores customizados
-│   │   └── resources/
-│   │       ├── application.properties
-│   │       └── db/migration/       # Scripts Flyway
+│   └── main/
+│      ├── java/com/lpatros/ecommerce_api/
+│      │   ├── configuration/      # Configurações da aplicação
+│      │   ├── controller/         # Controllers REST
+│      │   ├── dto/                # Data Transfer Objects
+│      │   ├── entity/             # Entidades JPA
+│      │   ├── exception/          # Tratamento de exceções
+│      │   ├── mapper/             # Mapeadores DTO <-> Entity
+│      │   ├── repository/         # Repositórios JPA
+│      │   ├── service/            # Regras de negócio
+│      │   ├── util/               # Utilitários
+│      │   └── validator/          # Validadores customizados
+│      └── resources/
+│          ├── application.properties
+│          └── db/migration/       # Scripts Flyway
 │
-├── pom.xml                         # Dependências Maven
+├── pom.xml                        # Dependências Maven
 └── README.md
 ```
 
