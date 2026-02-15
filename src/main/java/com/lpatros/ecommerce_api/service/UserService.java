@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,12 +24,14 @@ public class UserService {
     private final UserValidator userValidator;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserValidator userValidator, UserRepository userRepository, UserMapper userMapper) {
+    public UserService(UserValidator userValidator, UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
         this.userValidator = userValidator;
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Pagination<UserResponse> findAll(UserFilter userFilter, Pageable pageable) {
@@ -53,6 +56,7 @@ public class UserService {
         userValidator.validateCreate(userRequest);
 
         User user = userMapper.toEntity(userRequest);
+        user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
 
         return userMapper.toResponse(userRepository.save(user));
     }

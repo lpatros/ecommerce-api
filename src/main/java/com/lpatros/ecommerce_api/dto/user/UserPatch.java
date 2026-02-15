@@ -1,5 +1,6 @@
 package com.lpatros.ecommerce_api.dto.user;
 
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,7 @@ public class UserPatch {
 
     private String phoneNumber;
 
+    @Email(message = "The email format is invalid")
     private String email;
 
     private String password;

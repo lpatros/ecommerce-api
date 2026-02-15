@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -37,24 +38,28 @@ public class ProductController {
     }
 
     @Operation(summary = "Create a new Product", method = "POST")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<ProductResponse> create(@RequestBody @Valid ProductRequest productRequest) {
         return ResponseEntity.ok(productService.create(productRequest));
     }
 
     @Operation(summary = "Update a Product by Id", method = "PUT")
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<ProductResponse> update(@PathVariable Long id, @RequestBody @Valid ProductRequest productRequest) {
         return ResponseEntity.ok(productService.update(id, productRequest));
     }
 
     @Operation(summary = "Partially update a Product by Id", method = "PATCH")
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{id}")
     public ResponseEntity<ProductResponse> partialUpdate(@PathVariable Long id, @RequestBody ProductPatch productPatch) {
         return ResponseEntity.ok(productService.partialUpdate(id, productPatch));
     }
 
     @Operation(summary = "Delete a Product by Id", method = "DELETE")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         productService.delete(id);

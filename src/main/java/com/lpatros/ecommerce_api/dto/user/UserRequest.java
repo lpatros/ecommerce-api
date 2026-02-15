@@ -1,5 +1,6 @@
 package com.lpatros.ecommerce_api.dto.user;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,7 @@ public class UserRequest {
     private String phoneNumber;
 
     @NotBlank(message = "The email of the user is required")
+    @Email(message = "The email format is invalid")
     private String email;
 
     @NotBlank(message = "The password of the user is required")

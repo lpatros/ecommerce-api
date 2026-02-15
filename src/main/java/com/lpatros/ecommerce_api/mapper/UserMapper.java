@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 @Component
 public class UserMapper {
 
@@ -48,8 +50,9 @@ public class UserMapper {
                 userRequest.getBirthDate(),
                 userRequest.getAddress(),
                 null,
-                null,
-                Boolean.FALSE
+                LocalDateTime.now(),
+                Boolean.FALSE,
+                "USER"
         );
     }
 

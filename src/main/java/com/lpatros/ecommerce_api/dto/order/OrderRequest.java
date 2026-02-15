@@ -28,8 +28,4 @@ public class OrderRequest {
 
     private String trackingCode;
 
-    @NotNull(message = "The user ID associated with the order is required")
-    private Long userId;
-
-
 }

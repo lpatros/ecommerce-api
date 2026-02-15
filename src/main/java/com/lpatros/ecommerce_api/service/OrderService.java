@@ -52,9 +52,9 @@ public class OrderService {
         return orderMapper.toResponse(order);
     }
 
-    public OrderResponse create(OrderRequest orderRequest) {
+    public OrderResponse create(OrderRequest orderRequest, Long userId) {
 
-        User user = userRepository.findById(orderRequest.getUserId())
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User", "id"));
 
         orderValidator.validateCreate(orderRequest);
@@ -71,5 +71,9 @@ public class OrderService {
         orderMapper.updateEntityFromPatch(order, orderPatch);
 
         return orderMapper.toResponse(orderRepository.save(order));
+    }
+
+    public boolean isOrderOwner(Long orderId, Long userId) {
+        return orderRepository.existsByIdAndUserId(orderId, userId);
     }
 }

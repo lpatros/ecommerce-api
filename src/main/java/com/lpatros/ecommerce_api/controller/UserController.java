@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,12 +25,14 @@ public class UserController {
     }
 
     @Operation(summary = "Get all Users with filters", method = "GET")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<Pagination<UserResponse>> findAll(@ModelAttribute UserFilter userFilter, Pageable pageable) {
         return ResponseEntity.ok(userService.findAll(userFilter, pageable));
     }
 
     @Operation(summary = "Get User by ID", method = "GET")
+    @PreAuthorize("hasRole('ADMIN') or (hasRole('USER') and #id == principal.id)")
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> findById(@PathVariable Long id) {
         return ResponseEntity.ok(userService.findById(id));
@@ -42,18 +45,21 @@ public class UserController {
     }
 
     @Operation(summary = "Update a User by Id", method = "PUT")
+    @PreAuthorize("hasRole('ADMIN') or (hasRole('USER') and #id == principal.id)")
     @PutMapping("/{id}")
     public ResponseEntity<UserResponse> update(@PathVariable Long id, @RequestBody UserRequest userRequest) {
         return ResponseEntity.ok(userService.update(id, userRequest));
     }
 
     @Operation(summary = "Partially update a User by Id", method = "PATCH")
+    @PreAuthorize("hasRole('ADMIN') or (hasRole('USER') and #id == principal.id)")
     @PatchMapping("/{id}")
     public ResponseEntity<UserResponse> partialUpdate(@PathVariable Long id, @RequestBody UserPatch userPatch) {
         return ResponseEntity.ok(userService.partialUpdate(id, userPatch));
     }
 
     @Operation(summary = "Delete a User by Id", method = "DELETE")
+    @PreAuthorize("hasRole('ADMIN') or (hasRole('USER') and #id == principal.id)")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         userService.delete(id);

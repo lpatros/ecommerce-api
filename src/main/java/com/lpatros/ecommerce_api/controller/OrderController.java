@@ -5,6 +5,7 @@ import com.lpatros.ecommerce_api.dto.order.OrderFilter;
 import com.lpatros.ecommerce_api.dto.order.OrderPatch;
 import com.lpatros.ecommerce_api.dto.order.OrderRequest;
 import com.lpatros.ecommerce_api.dto.order.OrderResponse;
+import com.lpatros.ecommerce_api.entity.User;
 import com.lpatros.ecommerce_api.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -12,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,24 +29,28 @@ public class OrderController {
     }
 
     @Operation(summary = "Get all Orders with filters", method = "GET")
+    @PreAuthorize("hasRole('ADMIN') or (hasRole('USER') and #orderFilter.userId == principal.id)")
     @GetMapping
     public ResponseEntity<Pagination<OrderResponse>> findAll(@ModelAttribute OrderFilter orderFilter, Pageable pageable) {
         return ResponseEntity.ok(orderService.findAll(orderFilter, pageable));
     }
 
     @Operation(summary = "Get Order by ID", method = "GET")
+    @PreAuthorize("hasRole('ADMIN') or (hasRole('USER') and @orderService.isOrderOwner(#id, principal.id))")
     @GetMapping("/{id}")
     public ResponseEntity<OrderResponse> findById(@PathVariable Long id) {
         return ResponseEntity.ok(orderService.findById(id));
     }
 
     @Operation(summary = "Create a new Order", method = "POST")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PostMapping
-    public ResponseEntity<OrderResponse> create(@Valid @RequestBody OrderRequest orderRequest) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.create(orderRequest));
+    public ResponseEntity<OrderResponse> create(@Valid @RequestBody OrderRequest orderRequest, @AuthenticationPrincipal User user) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.create(orderRequest, user.getId()));
     }
 
     @Operation(summary = "Partially update a Order by Id", method = "PATCH")
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{id}")
     public ResponseEntity<OrderResponse> partialUpdate(@PathVariable Long id, @Valid @RequestBody OrderPatch orderPatch) {
         return ResponseEntity.ok(orderService.partialUpdate(id, orderPatch));
