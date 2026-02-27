@@ -49,6 +49,20 @@ public class SecurityConfig {
                     // Allow unauthenticated access to user registration with POST
                     .requestMatchers(HttpMethod.POST, "/users").permitAll()
 
+                    // Allow unauthenticated access to Swagger UI and API docs
+                    .requestMatchers("/v2/api-docs").permitAll()
+                    .requestMatchers("/v3/api-docs").permitAll()
+                    .requestMatchers("/v3/api-docs/**").permitAll()
+                    .requestMatchers("/api-docs").permitAll()
+                    .requestMatchers("/api-docs/**").permitAll()
+                    .requestMatchers("/swagger-resources").permitAll()
+                    .requestMatchers("/swagger-resources/**").permitAll()
+                    .requestMatchers("/configuration/ui").permitAll()
+                    .requestMatchers("/configuration/security").permitAll()
+                    .requestMatchers("/swagger-ui/**").permitAll()
+                    .requestMatchers("/webjars/**").permitAll()
+                    .requestMatchers("/swagger-ui.html").permitAll()
+
                     // Require authentication for all other requests
                     .anyRequest().authenticated()
                 )
