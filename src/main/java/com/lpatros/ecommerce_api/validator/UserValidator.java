@@ -28,6 +28,7 @@ public class UserValidator {
     public void validateUpdate(UserRequest userRequest, Long userId) {
         validateEmailUnique(userRequest.getEmail(), userId);
         validatePhoneNumberUnique(userRequest.getPhoneNumber(), userId);
+        validatePasswordCombination(userRequest.getPassword(), userRequest.getConfirmPassword());
     }
 
     public void validatePatch(UserPatch userPatch, Long userId) {
@@ -36,6 +37,9 @@ public class UserValidator {
         }
         if (userPatch.getPhoneNumber() != null) {
             validatePhoneNumberUnique(userPatch.getPhoneNumber(), userId);
+        }
+        if (userPatch.getPassword() != null && userPatch.getConfirmPassword() != null) {
+            validatePasswordCombination(userPatch.getPassword(), userPatch.getConfirmPassword());
         }
     }
 

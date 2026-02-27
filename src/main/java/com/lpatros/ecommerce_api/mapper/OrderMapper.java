@@ -36,6 +36,10 @@ public class OrderMapper {
     }
 
     public List<OrderResponse> toResponseList(List<Order> orders) {
+        if (orders == null) {
+            return List.of();
+        }
+
         return orders.stream().map(this::toResponse).toList();
     }
 

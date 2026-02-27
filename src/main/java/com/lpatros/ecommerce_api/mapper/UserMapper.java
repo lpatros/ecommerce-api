@@ -7,18 +7,22 @@ import com.lpatros.ecommerce_api.dto.user.UserResponse;
 import com.lpatros.ecommerce_api.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Component
 public class UserMapper {
 
     private final OrderMapper orderMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserMapper(OrderMapper orderMapper) {
+    public UserMapper(OrderMapper orderMapper, PasswordEncoder passwordEncoder) {
         this.orderMapper = orderMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public UserResponse toResponse(User user) {
@@ -46,10 +50,10 @@ public class UserMapper {
                 userRequest.getName(),
                 userRequest.getPhoneNumber(),
                 userRequest.getEmail(),
-                userRequest.getPassword(),
+                passwordEncoder.encode(userRequest.getPassword()),
                 userRequest.getBirthDate(),
                 userRequest.getAddress(),
-                null,
+                List.of(),
                 LocalDateTime.now(),
                 Boolean.FALSE,
                 "USER"
@@ -65,6 +69,9 @@ public class UserMapper {
         }
         if (patch.getEmail() != null) {
             user.setEmail(patch.getEmail());
+        }
+        if (patch.getPassword() != null && patch.getConfirmPassword() != null) {
+            user.setPassword(passwordEncoder.encode(patch.getPassword()));
         }
         if (patch.getBirthDate() != null) {
             user.setBirthDate(patch.getBirthDate());
