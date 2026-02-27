@@ -15,6 +15,7 @@
 - [Descrição](#descrição)
 - [Tecnologias](#tecnologias)
 - [Funcionalidades](#funcionalidades)
+- [Swagger](#swagger)
 - [Estrutura do Projeto](#estrutura-do-projeto)
 - [Licença](#licença)
 
@@ -57,6 +58,24 @@ A API utiliza **PostgreSQL** como banco de dados, **Flyway** para versionamento 
 - Criação e consulta de pedidos
 - Itens de pedido associados
 - Cálculo de totais
+
+## Swagger
+
+Este projeto utiliza **SpringDoc OpenAPI** para gerar automaticamente a documentação interativa da API através do **Swagger UI**.
+
+### Acessando o Swagger
+
+Quando a aplicação está em execução, você pode acessar a documentação interativa da API através da seguinte rota:
+
+```
+http://localhost:8080/swagger-ui/index.html
+```
+
+Também é possível acessar a especificação OpenAPI em formato JSON:
+
+```
+http://localhost:8080/v3/api-docs
+```
 
 ## Estrutura do Projeto
 
