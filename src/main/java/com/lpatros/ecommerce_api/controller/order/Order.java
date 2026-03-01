@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Tag(name = "Order")
 @SecurityRequirement(name = "bearerAuth")
-@RequestMapping("orders")
+@RequestMapping("/orders")
 public interface Order {
 
     @Operation(summary = "Get all Orders with filters", method = "GET")

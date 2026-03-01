@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Tag(name = "Authentication")
-@RequestMapping("auth")
+@RequestMapping("/auth")
 public interface Auth {
 
     @Operation(summary = "Authenticate user and return JWT token", method = "POST")
