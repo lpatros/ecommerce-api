@@ -68,6 +68,7 @@ public class UserService {
         User updatedUser = userMapper.toEntity(userRequest);
         updatedUser.setId(id);
         updatedUser.setCreatedAt(user.getCreatedAt());
+        updatedUser.setRole(user.getRole());
 
         return userMapper.toResponse(userRepository.save(updatedUser));
     }
