@@ -1,6 +1,8 @@
+[PT-BR](README-PTBR.md)
+
 <div align="center">
   <h1 style="font-size: 32px; border: none; line-height: 0; font-weight: bold">Ecommerce API</h1>
-  <p>Desenvolvimento de uma API RESTful, estruturada segundo o padrão arquitetural MVC (Model-View-Controller), com o objetivo de gerenciar produtos, pedidos, usuários e demais recursos de um sistema de e-commerce.</p>
+  <p>Development of a RESTful API, structured according to the MVC (Model-View-Controller) architectural pattern, with the goal of managing products, orders, users, and other resources in an e-commerce system.</p>
     <div style="margin-bottom: 10px">
     <img src="https://img.shields.io/badge/Language-Java-orange.svg" alt="Java: 21"/>
     <img src="https://img.shields.io/badge/SpringBoot-6DB33F?logo=Spring&logoColor=white" alt="Spring Boot: 3.5.6"/>
@@ -10,98 +12,102 @@
     <br>
 </div>
 
-# Links Rápidos
+# Quick Links
 
-- [Descrição](#descrição)
-- [Tecnologias](#tecnologias)
-- [Funcionalidades](#funcionalidades)
+- [Description](#description)
+- [Technologies](#technologies)
+- [Features](#features)
 - [Swagger](#swagger)
-- [Estrutura do Projeto](#estrutura-do-projeto)
-- [Licença](#licença)
+- [Project Structure](#project-structure)
+- [License](#license)
 
-## Descrição
+## Description
 
-Este projeto é uma **API RESTful** desenvolvida com **Spring Boot** para o gerenciamento completo de um ecommerce. A aplicação implementa operações CRUD (Create, Read, Update, Delete) para categorias, produtos, usuários e pedidos, seguindo as melhores práticas de desenvolvimento e arquitetura em camadas.
+This project is a **RESTful API** built with **Spring Boot** for complete ecommerce management. The application implements CRUD (Create, Read, Update, Delete) operations for categories, products, users, and orders, following best practices for development and layered architecture.
 
-A API utiliza **PostgreSQL** como banco de dados, **Flyway** para versionamento de migrations, e **Spring Data JPA** para a camada de persistência.
+The API uses **PostgreSQL** as the database, **Flyway** for migration versioning, and **Spring Data JPA** for the persistence layer.
 
-## Tecnologias
+## Technologies
 
 - **Java 21**
 - **Spring Boot 3.5.6**
   - Spring Web
   - Spring Data JPA
   - Spring Boot DevTools
-- **PostgreSQL** - Banco de dados relacional
-- **Flyway** - Controle de versão do banco de dados
-- **Lombok** - Redução de código boilerplate
-- **SpringDoc OpenAPI** - Documentação automática da API (Swagger)
-- **Maven** - Gerenciamento de dependências
+- **PostgreSQL** - Relational database
+- **Flyway** - Database version control
+- **Lombok** - Reduces boilerplate code
+- **SpringDoc OpenAPI** - Automatic API documentation (Swagger)
+- **Maven** - Dependency management
 
-## Funcionalidades
+## Features
 
-### Gestão de Categorias
-- Criar, listar, atualizar e remover categorias de produtos
-- Filtros e paginação
+### Category Management
+- Create, list, update, and remove product categories
+- Filters and pagination
 
-### Gestão de Produtos
-- CRUD completo de produtos
-- Associação com categorias
-- Controle de estoque
-- Paginação e ordenação
+### Product Management
+- Full CRUD for products
+- Association with categories
+- Inventory control
+- Pagination and sorting
 
-### Gestão de Usuários
-- CRUD completo de usuários
-- Validações de dados
+### User Management
+- Full CRUD for users
+- Data validations
 
-### Gestão de Pedidos
-- Criação e consulta de pedidos
-- Itens de pedido associados
-- Cálculo de totais
+### Order Management
+- Create and query orders
+- Associated order items
+- Total calculations
 
 ## Swagger
 
-Este projeto utiliza **SpringDoc OpenAPI** para gerar automaticamente a documentação interativa da API através do **Swagger UI**.
+This project uses **SpringDoc OpenAPI** to automatically generate interactive API documentation through **Swagger UI**.
 
-### Acessando o Swagger
+### Accessing Swagger
 
-Quando a aplicação está em execução, você pode acessar a documentação interativa da API através da seguinte rota:
+When the application is running, you can access the interactive API documentation at the following route:
 
-```
-http://localhost:8080/swagger-ui/index.html
-```
-
-Também é possível acessar a especificação OpenAPI em formato JSON:
+> [!NOTE]
+> The base URL (`{{URL}}`) is usually `http://localhost:8080`, unless you have configured a different port.
 
 ```
-http://localhost:8080/v3/api-docs
+{{URL}}/swagger-ui/index.html
 ```
 
-## Estrutura do Projeto
+You can also access the OpenAPI specification in JSON format:
+
+```
+{{URL}}/v3/api-docs
+```
+
+## Project Structure
 
 ```
 ecommerce-api/
 ├── src/
 │   └── main/
 │      ├── java/com/lpatros/ecommerce_api/
-│      │   ├── configuration/      # Configurações da aplicação
-│      │   ├── controller/         # Controllers REST
+│      │   ├── configuration/      # Application configuration
+│      │   ├── controller/         # REST controllers
 │      │   ├── dto/                # Data Transfer Objects
-│      │   ├── entity/             # Entidades JPA
-│      │   ├── exception/          # Tratamento de exceções
-│      │   ├── mapper/             # Mapeadores DTO <-> Entity
-│      │   ├── repository/         # Repositórios JPA
-│      │   ├── service/            # Regras de negócio
-│      │   ├── util/               # Utilitários
-│      │   └── validator/          # Validadores customizados
+│      │   ├── entity/             # JPA entities
+│      │   ├── exception/          # Exception handling
+│      │   ├── mapper/             # DTO <-> Entity mappers
+│      │   ├── repository/         # JPA repositories
+│      │   ├── service/            # Business rules
+│      │   ├── util/               # Utilities
+│      │   └── validator/          # Custom validators
 │      └── resources/
 │          ├── application.properties
-│          └── db/migration/       # Scripts Flyway
+│          └── db/migration/       # Flyway scripts
 │
-├── pom.xml                        # Dependências Maven
-└── README.md
+├── pom.xml                        # Maven dependencies
+├── README-PTBR.md                 # Documentation in Portuguese
+└── README.md                      # Documentation in English
 ```
 
-## Licença
+## License
 
-Este projeto está licenciado sob a Licença [MIT](https://github.com/lpatros/ecommerce-api/blob/main/LICENSE.txt).
+This project is licensed under the [MIT License](https://github.com/lpatros/ecommerce-api/blob/main/LICENSE.txt).
