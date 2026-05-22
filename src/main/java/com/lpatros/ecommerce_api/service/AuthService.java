@@ -3,6 +3,7 @@ package com.lpatros.ecommerce_api.service;
 import com.lpatros.ecommerce_api.configuration.JwtTokenConfig;
 import com.lpatros.ecommerce_api.dto.auth.LoginRequest;
 import com.lpatros.ecommerce_api.dto.auth.LoginResponse;
+import com.lpatros.ecommerce_api.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,10 +23,10 @@ public class AuthService {
     }
 
     public LoginResponse login(LoginRequest request) {
-        UsernamePasswordAuthenticationToken userAndPass = new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword());
-        Authentication authentication = authenticationManager.authenticate(userAndPass);
+        UsernamePasswordAuthenticationToken userAndPass = new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword());
+        User authenticationUser = (User) authenticationManager.authenticate(userAndPass).getPrincipal();
 
-        String token = jwtTokenConfig.generateToken(authentication.getName());
+        String token = jwtTokenConfig.generateToken(authenticationUser.getId(), authenticationUser.getEmail());
         return new LoginResponse(token);
     }
 }

@@ -18,12 +18,13 @@ public class JwtTokenConfig {
     @Value("${jwt.expiration}")
     private long expiration;
 
-    public String generateToken(String username) {
+    public String generateToken(Long userId, String email) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             return JWT.create()
                     .withIssuer("ecommerce-api")
-                    .withSubject(username)
+                    .withClaim("userId", userId)
+                    .withSubject(email)
                     .withExpiresAt(generateExpirationDate())
                     .sign(algorithm);
         } catch (Exception e) {
