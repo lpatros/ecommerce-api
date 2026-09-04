@@ -1,7 +1,9 @@
-[PT-BR](README-PTBR.md)
-
 <div align="center">
-  <h1 style="font-size: 32px; border: none; line-height: 0; font-weight: bold">Ecommerce API</h1>
+
+# Ecommerce API
+
+**English** | [Português](README-PTBR.md)
+
   <p>Development of a RESTful API, structured according to the MVC (Model-View-Controller) architectural pattern, with the goal of managing products, orders, users, and other resources in an e-commerce system.</p>
     <div style="margin-bottom: 10px">
     <img src="https://img.shields.io/badge/Language-Java-orange.svg" alt="Java: 21"/>

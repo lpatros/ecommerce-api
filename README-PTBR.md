@@ -1,7 +1,9 @@
-[EN](README.md)
-
 <div align="center">
-  <h1 style="font-size: 32px; border: none; line-height: 0; font-weight: bold">Ecommerce API</h1>
+
+# Ecommerce API
+
+[English](README.md) | **Português**
+
   <p>Desenvolvimento de uma API RESTful, estruturada segundo o padrão arquitetural MVC (Model-View-Controller), com o objetivo de gerenciar produtos, pedidos, usuários e demais recursos de um sistema de e-commerce.</p>
     <div style="margin-bottom: 10px">
     <img src="https://img.shields.io/badge/Language-Java-orange.svg" alt="Java: 21"/>
