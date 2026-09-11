@@ -32,7 +32,7 @@ The API uses **PostgreSQL** as the database, **Flyway** for migration versioning
 ## Technologies
 
 - **Java 21**
-- **Spring Boot 3.5.6**
+- **Spring Boot 4.1.1**
   - Spring Web
   - Spring Data JPA
   - Spring Boot DevTools
