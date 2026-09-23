@@ -45,7 +45,7 @@ public class OrderItemMapper {
         return new OrderItem(
             null,
             orderItemRequest.getQuantity(),
-            orderItemRequest.getUnitPrice(),
+            product.getPrice(),
             product,
             order,
             Boolean.FALSE
