@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 @Service
@@ -53,6 +54,7 @@ public class ProductService {
         return productMapper.toResponse(product);
     }
 
+    @Transactional
     public ProductResponse create(ProductRequest productRequest) {
 
         Category category = categoryRepository.findById(productRequest.getCategoryId())
@@ -65,6 +67,7 @@ public class ProductService {
         return productMapper.toResponse(productRepository.save(product));
     }
 
+    @Transactional
     public ProductResponse update(Long id, ProductRequest productRequest) {
 
         Product product = productRepository.findById(id)
@@ -82,6 +85,7 @@ public class ProductService {
         return productMapper.toResponse(productRepository.save(updatedProduct));
     }
 
+    @Transactional
     public ProductResponse partialUpdate(Long id, ProductPatch productPatch) {
 
         Product product = productRepository.findById(id)
@@ -100,6 +104,7 @@ public class ProductService {
         return productMapper.toResponse(productRepository.save(product));
     }
 
+    @Transactional
     public void delete(Long id) {
 
         Product product = productRepository.findById(id)

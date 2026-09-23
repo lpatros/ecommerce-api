@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -31,7 +32,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(NotFoundException.class)
-    private ResponseEntity<RestErrorMessage> NotFoundException(NotFoundException ex) {;
+    public ResponseEntity<RestErrorMessage> handleNotFoundException(NotFoundException ex) {
         RestErrorMessage restErrorMessage = new RestErrorMessage(
                 LocalDateTime.now(),
                 HttpStatus.NOT_FOUND.value(),
@@ -41,52 +42,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(restErrorMessage);
     }
 
-    @ExceptionHandler(NotActiveException.class)
-    private ResponseEntity<RestErrorMessage> NotActiveException(NotActiveException ex) {;
-        RestErrorMessage restErrorMessage = new RestErrorMessage(
-                LocalDateTime.now(),
-                HttpStatus.BAD_REQUEST.value(),
-                ex.getMessage(),
-                null);
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(restErrorMessage);
-    }
-
-    @ExceptionHandler(NotUniqueException.class)
-    private ResponseEntity<RestErrorMessage> NotUniqueException(NotUniqueException ex) {;
-        RestErrorMessage restErrorMessage = new RestErrorMessage(
-                LocalDateTime.now(),
-                HttpStatus.BAD_REQUEST.value(),
-                ex.getMessage(),
-                null);
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(restErrorMessage);
-    }
-
-    @ExceptionHandler(NotMatchException.class)
-    private ResponseEntity<RestErrorMessage> FieldsNotMatchException(NotMatchException ex) {;
-        RestErrorMessage restErrorMessage = new RestErrorMessage(
-                LocalDateTime.now(),
-                HttpStatus.BAD_REQUEST.value(),
-                ex.getMessage(),
-                null);
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(restErrorMessage);
-    }
-
-    @ExceptionHandler(NotNegativeException.class)
-    private ResponseEntity<RestErrorMessage> NotNegativeException(NotNegativeException ex) {;
-        RestErrorMessage restErrorMessage = new RestErrorMessage(
-                LocalDateTime.now(),
-                HttpStatus.BAD_REQUEST.value(),
-                ex.getMessage(),
-                null);
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(restErrorMessage);
-    }
-
-    @ExceptionHandler(DuplicateItemsListException.class)
-    private ResponseEntity<RestErrorMessage> DuplicateItemsListException(DuplicateItemsListException ex) {;
+    @ExceptionHandler({NotActiveException.class, NotUniqueException.class, NotMatchException.class,
+            NotNegativeException.class, DuplicateItemsListException.class})
+    public ResponseEntity<RestErrorMessage> handleBadRequestExceptions(RuntimeException ex) {
         RestErrorMessage restErrorMessage = new RestErrorMessage(
                 LocalDateTime.now(),
                 HttpStatus.BAD_REQUEST.value(),
@@ -214,5 +172,29 @@ public class GlobalExceptionHandler {
         );
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(restErrorMessage);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<RestErrorMessage> handleAccessDeniedException(AccessDeniedException ex) {
+        RestErrorMessage restErrorMessage = new RestErrorMessage(
+                LocalDateTime.now(),
+                HttpStatus.FORBIDDEN.value(),
+                "Access denied",
+                null
+        );
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(restErrorMessage);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<RestErrorMessage> handleGenericException(Exception ex) {
+        RestErrorMessage restErrorMessage = new RestErrorMessage(
+                LocalDateTime.now(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "An unexpected error occurred",
+                null
+        );
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(restErrorMessage);
     }
 }

@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CategoryService {
@@ -47,6 +48,7 @@ public class CategoryService {
         return categoryMapper.toResponse(category);
     }
 
+    @Transactional
     public CategoryResponse create(CategoryRequest categoryRequest) {
 
             categoryValidator.validateCreate(categoryRequest);
@@ -56,6 +58,7 @@ public class CategoryService {
             return categoryMapper.toResponse(categoryRepository.save(category));
     }
 
+    @Transactional
     public CategoryResponse update(Long id, CategoryRequest categoryRequest) {
 
         Category category = categoryRepository.findById(id)
@@ -69,6 +72,7 @@ public class CategoryService {
         return categoryMapper.toResponse(categoryRepository.save(updatedCategory));
     }
 
+    @Transactional
     public void delete(Long id) {
 
         Category category = categoryRepository.findById(id)
