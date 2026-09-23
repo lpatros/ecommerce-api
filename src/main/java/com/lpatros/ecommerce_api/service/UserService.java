@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserService {
@@ -49,6 +50,7 @@ public class UserService {
         return userMapper.toResponse(user);
     }
 
+    @Transactional
     public UserResponse create(UserRequest userRequest) {
 
         userValidator.validateCreate(userRequest);
@@ -58,6 +60,7 @@ public class UserService {
         return userMapper.toResponse(userRepository.save(user));
     }
 
+    @Transactional
     public UserResponse update(Long id, UserRequest userRequest) {
 
         User user = userRepository.findById(id)
@@ -73,6 +76,7 @@ public class UserService {
         return userMapper.toResponse(userRepository.save(updatedUser));
     }
 
+    @Transactional
     public UserResponse partialUpdate(Long id, UserPatch userPatch) {
 
         User user = userRepository.findById(id)
@@ -85,6 +89,7 @@ public class UserService {
         return userMapper.toResponse(userRepository.save(user));
     }
 
+    @Transactional
     public void delete(Long id) {
 
         User user = userRepository.findById(id)
