@@ -3,6 +3,7 @@ package com.lpatros.ecommerce_api.configuration;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +18,13 @@ public class JwtTokenConfig {
 
     @Value("${jwt.expiration}")
     private long expiration;
+
+    @PostConstruct
+    void validateSecret() {
+        if (secret == null || secret.getBytes(java.nio.charset.StandardCharsets.UTF_8).length < 32) {
+            throw new IllegalStateException("jwt.secret must be at least 32 bytes");
+        }
+    }
 
     public String generateToken(Long userId, String email) {
         try {
