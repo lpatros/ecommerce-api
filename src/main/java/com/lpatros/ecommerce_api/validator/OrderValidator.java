@@ -4,11 +4,11 @@ import com.lpatros.ecommerce_api.dto.order.OrderRequest;
 import com.lpatros.ecommerce_api.dto.order.orderItem.OrderItemRequest;
 import com.lpatros.ecommerce_api.exception.DuplicateItemsListException;
 import com.lpatros.ecommerce_api.exception.NotMatchException;
+import com.lpatros.ecommerce_api.exception.NotFoundException;
 import com.lpatros.ecommerce_api.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -25,8 +25,7 @@ public class OrderValidator {
 
     public void validateCreate(OrderRequest orderRequest) {
         validateDuplicateItemsList(orderRequest.getOrderItems());
-        validateTotalPrice(orderRequest);
-        validateUnitPrice(orderRequest.getOrderItems());
+        validateStock(orderRequest.getOrderItems());
     }
 
     public void validateDuplicateItemsList(List<OrderItemRequest> orderItems) {
@@ -39,30 +38,14 @@ public class OrderValidator {
         }
     }
 
-    public void validateTotalPrice(OrderRequest orderRequest) {
-
-        BigDecimal totalPrice = orderRequest.getTotalPrice();
-
-        BigDecimal calculatedTotal = orderRequest.getOrderItems().stream()
-                .map(item -> item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        if (totalPrice.compareTo(calculatedTotal) != 0) {
-            throw new NotMatchException("Total price", "calculated total price");
-        }
-    }
-
-    public void validateUnitPrice(List<OrderItemRequest> orderItems) {
-
+    public void validateStock(List<OrderItemRequest> orderItems) {
         for (OrderItemRequest item : orderItems) {
-            BigDecimal actualPrice = productRepository.findById(item.getProductId())
-                    .orElseThrow(() -> new RuntimeException("Product not found"))
-                    .getPrice();
+            var product = productRepository.findById(item.getProductId())
+                    .orElseThrow(() -> new NotFoundException("Product", "id"));
 
-            if (item.getUnitPrice().compareTo(actualPrice) != 0) {
-                throw new NotMatchException("Price", "actual product price");
+            if (product.getStock() == null || product.getStock() < item.getQuantity()) {
+                throw new NotMatchException("Requested quantity", "available stock");
             }
         }
-
     }
 }
