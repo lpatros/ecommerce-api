@@ -13,6 +13,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -23,6 +25,8 @@ import java.util.List;
 @Component
 @Profile("mock")
 public class MockData implements CommandLineRunner {
+
+    private static final Logger log = LoggerFactory.getLogger(MockData.class);
 
     private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
@@ -49,22 +53,22 @@ public class MockData implements CommandLineRunner {
             userRepository.deleteAll();
 
             List<Category> categoryList = loadCategories();
-            System.out.println(">>> Category mock data loaded successfully!");
+            log.info("Category mock data loaded successfully!");
 
             List<Product> productList = loadProducts(categoryList);
-            System.out.println(">>> Product mock data loaded successfully!");
+            log.info("Product mock data loaded successfully!");
 
             List<User> userList = loadUsers();
-            System.out.println(">>> User mock data loaded successfully!");
+            log.info("User mock data loaded successfully!");
 
             List<Order> orderList = loadOrders(userList);
-            System.out.println(">>> Order mock data loaded successfully!");
+            log.info("Order mock data loaded successfully!");
 
             loadOrderItems(orderList, productList);
-            System.out.println(">>> Order Items mock data loaded successfully!");
+            log.info("Order Items mock data loaded successfully!");
 
         } catch (Exception e) {
-            System.out.println(">>> Error loading mock data: " + e.getMessage());
+            log.error("Error loading mock data: {}", e.getMessage());
         }
     }
 
