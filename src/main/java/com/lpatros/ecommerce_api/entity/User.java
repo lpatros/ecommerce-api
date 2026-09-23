@@ -67,10 +67,8 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (role == null || role.isEmpty()) {
-            role = "USER";
-        }
-        return List.of(new SimpleGrantedAuthority("ROLE_" + role.toUpperCase()));
+        String effectiveRole = (role == null || role.isEmpty()) ? "USER" : role;
+        return List.of(new SimpleGrantedAuthority("ROLE_" + effectiveRole.toUpperCase()));
     }
 
     @Override
@@ -95,6 +93,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return UserDetails.super.isEnabled();
+        return !Boolean.TRUE.equals(deleted);
     }
 }
