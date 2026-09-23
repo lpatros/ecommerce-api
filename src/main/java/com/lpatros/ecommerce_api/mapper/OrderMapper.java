@@ -6,10 +6,12 @@ import com.lpatros.ecommerce_api.dto.order.OrderRequest;
 import com.lpatros.ecommerce_api.dto.order.OrderResponse;
 import com.lpatros.ecommerce_api.entity.User;
 import com.lpatros.ecommerce_api.entity.order.Order;
+import com.lpatros.ecommerce_api.entity.order.OrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -52,8 +54,8 @@ public class OrderMapper {
         Order order = new Order(
             null,
             null,
-            orderRequest.getTotalPrice(),
-            orderRequest.getStatus(),
+            BigDecimal.ZERO,
+            OrderStatus.PENDING,
             orderRequest.getTrackingCode(),
             user,
             LocalDateTime.now(),
@@ -61,6 +63,11 @@ public class OrderMapper {
         );
 
         order.setOrderItems(orderItemMapper.toEntityList(orderRequest.getOrderItems(), order));
+
+        BigDecimal total = order.getOrderItems().stream()
+                .map(item -> item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        order.setTotalPrice(total);
 
         return order;
     }
