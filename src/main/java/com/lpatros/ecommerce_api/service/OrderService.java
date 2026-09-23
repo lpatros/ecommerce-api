@@ -18,6 +18,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
 
 @Service
 public class OrderService {
@@ -52,6 +55,7 @@ public class OrderService {
         return orderMapper.toResponse(order);
     }
 
+    @Transactional
     public OrderResponse create(OrderRequest orderRequest, Long userId) {
 
         User user = userRepository.findById(userId)
@@ -61,9 +65,12 @@ public class OrderService {
 
         Order order = orderMapper.toEntity(orderRequest, user);
 
+        decreaseStock(order);
+
         return orderMapper.toResponse(orderRepository.save(order));
     }
 
+    @Transactional
     public OrderResponse partialUpdate(Long id, OrderPatch orderPatch) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Order", "id"));
@@ -75,5 +82,12 @@ public class OrderService {
 
     public boolean isOrderOwner(Long orderId, Long userId) {
         return orderRepository.existsByIdAndUserId(orderId, userId);
+    }
+
+    private void decreaseStock(Order order) {
+        order.getOrderItems().forEach(item -> {
+            var product = item.getProduct();
+            product.setStock(product.getStock() - item.getQuantity());
+        });
     }
 }
